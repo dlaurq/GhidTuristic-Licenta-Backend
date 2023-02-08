@@ -19,10 +19,14 @@ connection.query(
 });
 connection.end();
 
-module.exports = new Sequelize('Licenta', MYSQL_USER, MYSQL_PASSWORD, {
+//DB connaction
+const sequelize = new Sequelize('Licenta', MYSQL_USER, MYSQL_PASSWORD, {
     host: MYSQL_IP,
     dialect: 'mysql',
     define: {
         freezTableName: true
     }
   });
+
+module.exports = sequelize;
+

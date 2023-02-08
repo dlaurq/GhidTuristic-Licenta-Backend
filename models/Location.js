@@ -7,7 +7,7 @@ Location.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
     city: {type: DataTypes.STRING, allowNull: false, unique: true},
     adress:{type: DataTypes.STRING}
-},{db})
+},{sequelize:db})
 
 
 module.exports = Location;

@@ -5,7 +5,7 @@ class PlaceReviews extends Model{}
 
 PlaceReviews.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
-},{db})
+},{sequelize:db})
 
 
 module.exports = PlaceReviews;

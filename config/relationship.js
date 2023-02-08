@@ -1,8 +1,6 @@
-const { belongsTo } = require("../models/PlacesToVisit");
-
-function relationshipGen(db){
-    const {Country, County, Day, DaySchedule, HaveReviewed, Hour, Image, Location, Place, PlaceReviews, PlacesToVisit, PlacesVisited, Review, User, UserReviews} = db.models;
-
+module.exports = () => {
+    const {Country, County, Image, Location, Place, PlaceReviews, PlacesToVisit, PlacesVisited, Review, User} = require('./ModelsConfig')
+    console.log('aaa')
     //One to One Relations
     User.hasOne(Image);
     Image.belongsTo(User);
@@ -35,29 +33,20 @@ function relationshipGen(db){
     PlacesToVisit.belongsTo(User);
     Place.hasMany(PlacesToVisit);
     PlacesToVisit.belongsTo(Place);
-    //////VisitedPlaces
+    //////PlacesVisited
     User.belongsToMany(Place,{through: PlacesVisited});
     Place.belongsToMany(User,{through: PlacesVisited});
     User.hasMany(PlacesVisited);
     PlacesVisited.belongsTo(User);
     Place.hasMany(PlacesVisited);
-    PlacesVisited.belongsTo(Place)
+    PlacesVisited.belongsTo(Place);
 
-    //Super Many to Many to Many relations
-    ////Place - Review - User
-    //////Super M:N Place - Review
-    Place.belongsToMany(Review,{through: PlaceReviews});
-    Review.belongsToMany(Place,{through: PlaceReviews});
-    Place.hasMany(PlaceReviews);
+    // Many to Many to Many
+    //// Place - User - Review
+    User.hasMany(PlaceReviews);
     Review.hasMany(PlaceReviews);
-    PlaceReviews.belongsTo(Place);
+    Place.hasMany(PlaceReviews);
+    PlaceReviews.belongsTo(User);
     PlaceReviews.belongsTo(Review);
-    //////Super M:N User - PlaceReviews
-    User.belongsToMany(PlaceReviews,{through: UserReviews});
-    PlaceReviews.belongsToMany(User,{through: UserReviews});
-    User.hasMany(UserReviews);
-    PlaceReviews.hasMany(UserReviews);
-    UserReviews.belongsTo(User);
-    UserReviews.belongsTo(PlaceReviews);
+    PlaceReviews.belongsTo(Place);
 }
-module.exports = {relationshipGen};

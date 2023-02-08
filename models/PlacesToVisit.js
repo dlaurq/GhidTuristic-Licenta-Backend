@@ -6,8 +6,7 @@ class PlacesToVisit extends Model{}
 
 PlacesToVisit.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
-    
-},{db, freezeTableName:true})
+},{sequelize:db, freezeTableName:true})
 
 
 module.exports = PlacesToVisit;

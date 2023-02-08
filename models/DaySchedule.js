@@ -10,7 +10,7 @@ DaySchedules.init({
     placeId: {type: DataTypes.INTEGER, references: {model: Place, key: 'id'}},
     openHourId: {type: DataTypes.INTEGER, references: {model: Hour, key: 'id'}},
     closeHourId: {type: DataTypes.INTEGER, references: {model: Hour, key: 'id'}},
-},{db, freezeTableName:true})
+},{sequelize:db, freezeTableName:true})
 
 
 module.exports = DaySchedules;

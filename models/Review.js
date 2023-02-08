@@ -9,7 +9,7 @@ Review.init({
     description: {type: DataTypes.STRING, allowNull: false},
     rating: {type: DataTypes.FLOAT, allowNull: false},
     postDate: {type: DataTypes.DATE, allowNull: false},
-},{db})
+},{sequelize:db})
 
 
 module.exports = Review;

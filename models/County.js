@@ -6,7 +6,7 @@ class County extends Model{}
 County.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
     name: {type: DataTypes.STRING, allowNull: false, unique: true}
-},{db})
+},{sequelize:db})
 
 
 module.exports = County;

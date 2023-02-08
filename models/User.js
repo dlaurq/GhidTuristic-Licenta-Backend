@@ -11,7 +11,6 @@ User.init({
     email: {type: DataTypes.STRING, allowNull: false},
     phoneNr: {type: DataTypes.STRING},
     bio: {type: DataTypes.STRING},
-},{db})
-
+},{sequelize:db})
 
 module.exports = User;

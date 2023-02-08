@@ -6,7 +6,7 @@ class Image extends Model{}
 Image.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
     imgUrl: {type: DataTypes.STRING, allowNull: false}
-},{db})
+},{sequelize:db})
 
 
 module.exports = Image;
