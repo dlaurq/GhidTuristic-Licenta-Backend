@@ -1,10 +1,7 @@
 const express = require('express')
-
-const { MYSQL_USER, MYSQL_PASSWORD, MYSQL_IP } = require('./config/config');
-
-//Database
 const db = require('./config/database')
-
+const usersRoutes = require('./routes/api/users')
+const authRoutes = require('./routes/api/authRoutes')
 //DB test
 try {
   db.authenticate();
@@ -12,21 +9,19 @@ try {
 } catch (error) {
   console.error('Unable to connect to the database:', error);
 }
-/*
-(async () =>{
-  await db.sync()
-})();
-*/
-
 const dbConfig = require('./config/dbConfig')
 dbConfig()
 
+//app
 const app = express()
 
 
 app.get('/', (req, res) => {
   res.send('Hello World!!as!s')
 })
+app.use(express.json())
+app.use('/api/users', usersRoutes)
+app.use('/', authRoutes)
 
 
 
