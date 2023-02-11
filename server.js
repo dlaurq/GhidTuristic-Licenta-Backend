@@ -1,7 +1,11 @@
 const express = require('express')
 const db = require('./config/database')
+//Routes
 const usersRoutes = require('./routes/api/users')
 const authRoutes = require('./routes/api/authRoutes')
+const countryRoutes = require('./routes/api/countryRoutes')
+const {absRouter:countyRoutes} = require('./routes/api/countyRoutes')
+
 //DB test
 try {
   db.authenticate();
@@ -22,6 +26,8 @@ app.get('/', (req, res) => {
 app.use(express.json())
 app.use('/api/users', usersRoutes)
 app.use('/', authRoutes)
+app.use('/api/countries', countryRoutes)
+app.use('/api/counties', countyRoutes)
 
 
 
