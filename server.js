@@ -5,6 +5,7 @@ const usersRoutes = require('./routes/api/users')
 const authRoutes = require('./routes/api/authRoutes')
 const countryRoutes = require('./routes/api/countryRoutes')
 const {absRouter:countyRoutes} = require('./routes/api/countyRoutes')
+const reviewRoutes = require('./routes/api/reviewRoutes')
 
 //DB test
 try {
@@ -28,6 +29,7 @@ app.use('/api/users', usersRoutes)
 app.use('/', authRoutes)
 app.use('/api/countries', countryRoutes)
 app.use('/api/counties', countyRoutes)
+app.use('/api/review', reviewRoutes)
 
 
 

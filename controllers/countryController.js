@@ -13,7 +13,6 @@ const getCountry = async (req,res)=>{
 
 const createCountry = async (req,res) =>{
     const [country, created] = await Country.findOrCreate({where: {name:req.body.name}})
-    console.log(created)
     if(created) res.json({message:'Tara a fost inregistrata cu succes.'})
     else res.json({message:'Tara este deja inregistrata.'})
 }
