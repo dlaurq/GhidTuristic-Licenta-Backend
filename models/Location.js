@@ -4,9 +4,9 @@ const db = require('../config/database')
 class Location extends Model{}
 
 Location.init({
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
-    city: {type: DataTypes.STRING, allowNull: false},
-    adress:{type: DataTypes.STRING}
+    id: {type: DataTypes.UUID, defaultValue:DataTypes.UUIDV4, primaryKey: true, allowNull: false},
+    address:{type: DataTypes.STRING, allowNull: false},
+    geoLocaton:{type: DataTypes.STRING}
 },{sequelize:db})
 
 

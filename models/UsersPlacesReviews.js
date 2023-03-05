@@ -1,13 +1,11 @@
 const {DataTypes, Model} = require('sequelize');
 const db = require('../config/database');
 
+class UsersPlacesReviews extends Model{}
 
-class PlacesVisited extends Model{}
-
-PlacesVisited.init({
+UsersPlacesReviews.init({
     id: {type: DataTypes.UUID, defaultValue:DataTypes.UUIDV4, primaryKey: true, allowNull: false},
-    date: {type: DataTypes.DATE, allowNull: false},
-},{sequelize:db, freezeTableName:true})
+},{sequelize:db})
 
 
-module.exports = PlacesVisited;
+module.exports = UsersPlacesReviews;

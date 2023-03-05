@@ -4,9 +4,10 @@ const db = require('../config/database')
 class Place extends Model{}
 
 Place.init({
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
+    id: {type: DataTypes.UUID, defaultValue:DataTypes.UUIDV4, primaryKey: true, allowNull: false},
     name: {type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING, allowNull: false},
+    isActive: {type:DataTypes.BOOLEAN, allowNull:false}
 },{sequelize:db})
 
 

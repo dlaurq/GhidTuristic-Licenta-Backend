@@ -1,59 +1,89 @@
 const validator = require('validator')
+const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 
 
-//autentificare
-const signin = async (req,res)=>{
-    const {username, password} = req.body.user
+const login = async (req,res)=>{
+
+    const {username, password} = req.body
+    if(!username || !password) return res.status(400).json({message:'Toate campurile trebuiesc completate'})
 
     const user = await User.findOne({where: {username:username}})
-    if(user !== null){
-        const validPW = await bcrypt.compare(password, user.password)
+    if(!user) return res.status(401).json({message:'Neautorizat'})
 
-        if(validPW) res.json({message:'Autentificare reusita'})
-        else res.json({message:'Parola incorecta'})
-    }
-    else res.json({message:'Username Incorect'})
-}
+    const match = await bcrypt.compare(password, user.password)
+    if(!match) return res.status(401).json({message:'Neautorizat'})
+    
+    const accessToken = jwt.sign(
+        {
+            'UserInfo':{
+                'username':user.username,
+                'roles':user.getUserRoles
+            }
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn:'10m'}
+    )
 
-//register
-const signup = async (req,res)=>{
-    const user = req.body.user
-    const username = await User.findOne({where: {username:user.username}})
-    const email = await User.findOne({where: {email:user.email}})
+    const refreshToken = jwt.sign(
+        {
+            'username':user.username
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {expiresIn:'7D'}
+    )
 
-    if(username !== null) res.json({message:"Username existent"})
-    if(email !== null) res.json({message:"Email existent"})
-    if(!isValidEmail(user.email) || !isValidPass(user.password) || !isValidUsername(user.username)) res.json({message:"Date incorecte"})
-
-    const password = user.password
-    const saltRounds=10;
-    bcrypt.hash(password, saltRounds, async (err, hash) =>{
-        const newUser = await User.create({
-            username:user.username,
-            password:hash,
-            email:user.email
-        })
+    res.cookie('jwt', refreshToken,{
+        httpOnly:true,
+        secure:true,
+        sameSite:'None',
+        maxAge: 7*24*60*60*1000
     })
-    
-    res.json({message:"Cont inregistrat"})
+
+    res.json({accessToken})
 }
 
-const signout = async (req,res)=>{
-    
+const refresh = (req,res) =>{
+    const cookies = req.cookies
+
+    if(!cookies?.jwt) return res.status(401).json({message:'Neautorizat'})
+
+    const refreshToken = cookies.jwt
+
+    jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        async (err, decode) =>{
+            if (err) return res.status(403).json({message:'Interzis'})
+
+            const user = await User.findOne({where: {username:decode.username}})
+
+            if(!user) return res.status(401).json({message:'Neautorizat'})
+
+            const accessToken = jwt.sign(
+                {
+                    'UserInfo':{
+                        'username':user.username,
+                        'roles':user.getUserRoles
+                    }
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                {expiresIn:'10m'}
+            )
+
+            res.json({accessToken})
+        })
 }
 
-function isValidEmail(email){
-    return validator.isEmail(email)
+const logout = async (req,res)=>{
+    const cookies = req.cookies
+    if(!cookies?.jwt) return res.sendStatus(204)
+    res.clearCookie('jwt',{httpOnly:true, sameSite:'None', secure:true})
+    res.json({message:'Cookie cleared'})
 }
 
-function isValidUsername(username){
-    return (validator.isLength(username,{min:4,max:16}) && validator.isAlphanumeric(username))
-}
+//Generate JWT
 
-function isValidPass(pass){
-    return validator.isStrongPassword(pass)
-}
-
-module.exports = {signin, signout, signup}
+ 
+module.exports = {login, logout, refresh}

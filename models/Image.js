@@ -5,7 +5,8 @@ class Image extends Model{}
 
 Image.init({
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
-    imgUrl: {type: DataTypes.STRING, allowNull: false}
+    imgUrl: {type: DataTypes.STRING, allowNull: false},
+    isActive:{type: DataTypes.BOOLEAN, allowNull:false}
 },{sequelize:db})
 
 

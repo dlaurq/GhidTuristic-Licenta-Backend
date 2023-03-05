@@ -1,36 +1,36 @@
-const Country = require('../models/Contry')
+const Country = require('../models/Country')
 const County = require('../models/County')
 
 const getAllCountries = async (req,res)=>{
     const countries = await Country.findAll()
-    res.json(countries)
+    res.status(200).json(countries)
 }
 
 const getCountry = async (req,res)=>{
     const country = await Country.findByPk(req.params.id)
-    res.json(country)
+    res.status(200).json(country)
 }
 
 const createCountry = async (req,res) =>{
     const [country, created] = await Country.findOrCreate({where: {name:req.body.name}})
-    if(created) res.json({message:'Tara a fost inregistrata cu succes.'})
-    else res.json({message:'Tara este deja inregistrata.'})
+    if(!created) return res.status(409).json({message:'Tara este deja inregistrata.'})
+    res.status(201).json({country ,message:'Tara a fost inregistrata cu succes.'})
 }
 
 const updateCountry = async(req,res)=>{
-    const result = await Country.update({name:req.body.name}, {where:{id:req.body.id}})
-    if(!!parseInt(result)) res.json({message:'Tara a fost updatatat cu succes.'})
-    else res.json({message:'A aparut o eroare'})
+    console.log(req.params.id,req.body.name)
+    await Country.update({name:req.body.name}, {where:{id:req.params.id}})
+    res.status(200).json({message:'Tara a fost updatatat cu succes.'})
 }
 
 const deleteCountry = async(req,res)=>{
-    const counties = County.findAll({where:{CountryId:req.body.id}})
-    if(counties === null){
-        const result = await Country.destroy({where:{id:req.body.id}})
-        if(!!parseInt(result)) res.json({message:'Tara a fost stearsa cu succes.'})
-        else res.json({message:'A aparut o eroare'})
-    }else res.json({message:"Tara nu s-a putut sterge deoarece are judete atribuite."})
-    
+    const country = await Country.findByPk(req.params.id)
+    const counties = await country.countCounties()
+
+    if(counties !== 0) res.status(405).json({message:"Tara nu s-a putut sterge deoarece are judete atribuite."})
+
+    await Country.destroy({where:{id:req.params.id}})
+    res.status(200).json({message:'Tara a fost stearsa cu succes.'})
 }
 
 

@@ -1,4 +1,4 @@
-const Country = require('../models/Contry');
+const Country = require('../models/Country');
 const County = require('../models/County');
 const Location = require('../models/Location')
 
@@ -18,7 +18,6 @@ const getCounty = async (req,res)=>{
 }
 
 const createCounty = async (req,res) =>{
-    console.log(req.countryId)
     const country = await Country.findByPk(req.countryId)
     if(country !== null){
         const [county, created] = await County.findOrCreate({where: {name:req.body.name, CountryId:req.countryId}})
