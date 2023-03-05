@@ -4,26 +4,26 @@ const Location = require('../models/Location')
 
 const getAllCounties = async (req,res)=>{
     const counties = await County.findAll()
-    res.json(counties)
+    res.status(200).json(counties)
 }
 
 const getAllCountiesByCountry = async (req,res)=>{
-    const counties = await County.findAll({where:{CountryId:req.countryId}})
-    res.json(counties)
+    const counties = await County.findAll({where:{CountryId:req.params.id}})
+    res.status(200).json(counties)
 }
 
 const getCounty = async (req,res)=>{
     const county = await County.findByPk(req.params.id)
-    res.json(county)
+    res.status(200).json(county)
 }
 
 const createCounty = async (req,res) =>{
-    const country = await Country.findByPk(req.countryId)
+    const country = await Country.findByPk(req.body.countryId)
     if(country !== null){
-        const [county, created] = await County.findOrCreate({where: {name:req.body.name, CountryId:req.countryId}})
-        if(created) res.json({message:'Judetul a fost inregistrat cu succes.'}) 
-        else res.json({message:'Judetul este deja inregistrat.'})
-    }else res.json({message:'Tara nu exista.'})
+        const [county, created] = await County.findOrCreate({where: {name:req.body.name, CountryId:req.body.countryId}})
+        if(created) res.status(201).json({message:'Judetul a fost inregistrat cu succes.'}) 
+        else res.status(409).json({message:'Judetul este deja inregistrat.'})
+    }else res.status(404).json({message:'Tara nu exista.'})
 }
 
 const updateCounty = async(req,res)=>{

@@ -7,7 +7,6 @@ const {errorHandler} = require('./middleware/errorMiddleware')
 //Routes
 //const usersRoutes = require('./routes/api/usersRoutes')
 //const authRoutes = require('./routes/api/authRoutes')
-//const countryRoutes = 
 //const {absRouter:countyRoutes} = require('./routes/api/countyRoutes')
 //const reviewRoutes = require('./routes/api/reviewRoutes')
 
@@ -34,7 +33,7 @@ app.use(express.json())
 //app.use('/api/users', usersRoutes)
 //app.use('/api/auth', authRoutes)
 app.use('/api/countries', require('./routes/api/countryRoutes'))
-//app.use('/api/counties', countyRoutes)
+app.use('/api/counties', require('./routes/api/countyRoutes'))
 //app.use('/api/review', reviewRoutes)
 //app.use('/api/city', require('./routes/api/cityRoutes'))
 
