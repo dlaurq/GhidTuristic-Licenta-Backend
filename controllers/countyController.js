@@ -1,6 +1,6 @@
 const Country = require('../models/Country');
 const County = require('../models/County');
-const Location = require('../models/Location')
+const City = require('../models/City')
 
 const getAllCounties = async (req,res)=>{
     const counties = await County.findAll()
@@ -21,7 +21,7 @@ const createCounty = async (req,res) =>{
     const country = await Country.findByPk(req.body.countryId)
     if(country !== null){
         const [county, created] = await County.findOrCreate({where: {name:req.body.name, CountryId:req.body.countryId}})
-        if(created) res.status(201).json({message:'Judetul a fost inregistrat cu succes.'}) 
+        if(created) res.status(201).json({message:'Judetul a fost inregistrat cu succes.', county}) 
         else res.status(409).json({message:'Judetul este deja inregistrat.'})
     }else res.status(404).json({message:'Tara nu exista.'})
 }
@@ -38,17 +38,16 @@ const updateCounty = async(req,res)=>{
 }
 
 const deleteCounty = async(req,res)=>{
-    const locations = Location.findAll({where:{CountyId:req.body.id}})
-    if(locations === null){
-        const country = await Country.findByPk(req.countryId)
-        const county = await County.findByPk(req.body.id)
-        if(await country.hasCounty(county)){
-            const result = await County.destroy({where:{id:req.body.id}})
-            if(!!parseInt(result)) res.json({message:'Judetul a fost stearsa cu succes.'})
-            else res.json({message:'A aparut o eroare.'})
-        }else res.json({message:'Judetul nu apartine tarii.'})
-    }else res.json({message:"Judetul nu s-a putut sterge deoarece are locatii atribuite."})
+    console.log(req.params.id)
     
+    const cities = await City.findAll({where:{CountyId:req.params.id}})
+    console.log(cities.length)
+    
+    if(cities.length !== 0) return res.status(405).json({message:"Judetul nu s-a putut sterge deoarece are orase atribuite."})
+    console.log('este bun') 
+    
+    await County.destroy({where:{id:req.params.id}})
+    res.status(200).json({message:'Judetul a fost stearsa cu succes.'})
     
 }
 

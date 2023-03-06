@@ -18,7 +18,6 @@ const createCountry = async (req,res) =>{
 }
 
 const updateCountry = async(req,res)=>{
-    console.log(req.params.id,req.body.name)
     await Country.update({name:req.body.name}, {where:{id:req.params.id}})
     res.status(200).json({message:'Tara a fost updatatat cu succes.'})
 }
@@ -27,7 +26,7 @@ const deleteCountry = async(req,res)=>{
     const country = await Country.findByPk(req.params.id)
     const counties = await country.countCounties()
 
-    if(counties !== 0) res.status(405).json({message:"Tara nu s-a putut sterge deoarece are judete atribuite."})
+    if(counties !== 0) return res.status(405).json({message:"Tara nu s-a putut sterge deoarece are judete atribuite."})
 
     await Country.destroy({where:{id:req.params.id}})
     res.status(200).json({message:'Tara a fost stearsa cu succes.'})
