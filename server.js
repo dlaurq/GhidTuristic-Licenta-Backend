@@ -34,6 +34,7 @@ app.use(express.json())
 //app.use('/api/auth', authRoutes)
 app.use('/api/countries', require('./routes/api/countryRoutes'))
 app.use('/api/counties', require('./routes/api/countyRoutes'))
+app.use('/api/cities', require('./routes/api/cityRoutes'))
 //app.use('/api/review', reviewRoutes)
 //app.use('/api/city', require('./routes/api/cityRoutes'))
 

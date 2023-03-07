@@ -1,16 +1,16 @@
 const router = require('express').Router()
-const {getAllCities, getAllCitiesFromCounty, getCity, createCity, updateCity, deleteCity} = require('../../controllers/cityController')
+const {getAllCities,getCity, createCity, updateCity, deleteCity, getAllCitiesByCounty} = require('../../controllers/cityController')
 
-router.route('/')
-    .get(getAllCities)
-    .post(createCity)
-    .patch(updateCity)
-    .delete(deleteCity)
-
-router.route('/:id')
-    .get(getCity)
+router
+    .get('/',getAllCities)
+    .post('/',createCity)
     
-router.route('/county/:id')
-    .get(getAllCitiesFromCounty)
 
-module.exports = {router}
+router
+    .get('/:id',getCity)
+    .patch('/:id',updateCity)
+    .delete('/:id',deleteCity)
+
+router.get('/country/:id',getAllCitiesByCounty)
+
+module.exports = router
