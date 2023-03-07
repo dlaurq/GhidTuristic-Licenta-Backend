@@ -27,14 +27,8 @@ const createCounty = async (req,res) =>{
 }
 
 const updateCounty = async(req,res)=>{
-    const country = await Country.findByPk(req.countryId)
-    const county = await County.findByPk(req.body.id)
-    if (await country.hasCounty(county)){
-        const result = await County.update({name:req.body.name, CountryId:req.body.countryId}, {where:{id:req.body.id, CountryId:req.countryId}})
-        if(!!parseInt(result)) res.json({message:'Judetul a fost updatatat cu succes.'})
-        else res.json({message:'A aparut o eroare.'})
-    }else res.json({message:'Judetul nu apartine tarii.'})
-    
+    await County.update({name:req.body.name, CountryId:req.body.countryId}, {where:{id:req.params.id}})
+    res.status(200).json({message:'Judetul a fost updatatat cu succes.'})
 }
 
 const deleteCounty = async(req,res)=>{
