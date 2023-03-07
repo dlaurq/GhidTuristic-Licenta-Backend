@@ -1,6 +1,16 @@
 const router = require('express').Router()
-const {} = require('../../controllers/locationController')
+const {getAllLocations, getLocation, createLocation, updateLocation, deleteLocation, getAllLocationsByCity} = require('../../controllers/locationController')
 
-router.route('/')
+router
+    .get('/',getAllLocations)
+    .post('/',createLocation)
+    
 
-module.exports = {}
+router
+    .get('/:id',getLocation)
+    .patch('/:id',updateLocation)
+    .delete('/:id',deleteLocation)
+
+router.get('/country/:id',getAllLocationsByCity)
+
+module.exports = router
