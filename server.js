@@ -2,8 +2,11 @@ require('dotenv').config()
 require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
+const corsOptions = require('./config/corsOptions');
+const credentials = require('./middleware/credentials');
 const db = require('./config/database')
 const {errorHandler} = require('./middleware/errorMiddleware')
+const cookieParser = require('cookie-parser')
 //Routes
 //const usersRoutes = require('./routes/api/usersRoutes')
 //const authRoutes = require('./routes/api/authRoutes')
@@ -27,17 +30,20 @@ const app = express()
 
 
 app.get('/', (req, res) => {res.send('Hello World!!as!s')})
-app.use(cors({origin:['http://localhost:5173']}))
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(express.json())
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 
-//app.use('/api/users', usersRoutes)
-//app.use('/api/auth', authRoutes)
+
+app.use('/register', require('./routes/register'))
+app.use('/login', require('./routes/auth'))
 app.use('/api/countries', require('./routes/api/countryRoutes'))
 app.use('/api/counties', require('./routes/api/countyRoutes'))
 app.use('/api/cities', require('./routes/api/cityRoutes'))
 app.use('/api/locations', require('./routes/api/locationRoutes'))
-//app.use('/api/review', reviewRoutes)
-//app.use('/api/city', require('./routes/api/cityRoutes'))
+
 
 app.use(errorHandler)
 

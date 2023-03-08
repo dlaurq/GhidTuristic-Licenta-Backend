@@ -10,10 +10,10 @@ const login = async (req,res)=>{
     if(!username || !password) return res.status(400).json({message:'Toate campurile trebuiesc completate'})
 
     const user = await User.findOne({where: {username:username}})
-    if(!user) return res.status(401).json({message:'Neautorizat'})
+    if(!user) return res.status(401).json({message:'Utilizatorul nu a fost gasit'})
 
     const match = await bcrypt.compare(password, user.password)
-    if(!match) return res.status(401).json({message:'Neautorizat'})
+    if(!match) return res.status(401).json({message:'Parola incorecta'})
     
     const accessToken = jwt.sign(
         {

@@ -16,7 +16,8 @@ User.init({
     email: {type: DataTypes.STRING, allowNull: false, unique:true,validate:{isEmail:true}},
     phoneNr: {type: DataTypes.STRING, unique:true,validate:{isNumeric:true}},
     bio: {type: DataTypes.STRING,validate:{isAlphanumeric:true}},
-    isActive: {type: DataTypes.BOOLEAN, allowNull:false}
+    isActive: {type: DataTypes.BOOLEAN, allowNull:false},
+    refreshToken: {type: DataTypes.STRING}
 },{sequelize:db})
 
 module.exports = User;
