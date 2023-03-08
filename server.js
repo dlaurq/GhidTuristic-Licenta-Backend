@@ -7,6 +7,7 @@ const credentials = require('./middleware/credentials');
 const db = require('./config/database')
 const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
+const verifyJWT = require('./middleware/verifyJWT')
 //Routes
 //const usersRoutes = require('./routes/api/usersRoutes')
 //const authRoutes = require('./routes/api/authRoutes')
@@ -39,6 +40,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/register', require('./routes/register'))
 app.use('/login', require('./routes/auth'))
+app.use('/refresh', require('./routes/refresh'))
+
+//Protected routes
+app.use(verifyJWT)
 app.use('/api/countries', require('./routes/api/countryRoutes'))
 app.use('/api/counties', require('./routes/api/countyRoutes'))
 app.use('/api/cities', require('./routes/api/cityRoutes'))

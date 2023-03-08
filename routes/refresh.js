@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const refresh = require('../controllers/authController');
+const {refresh} = require('../controllers/authController');
 
 router.get('/', refresh)
 

@@ -14,12 +14,12 @@ const login = async (req,res)=>{
 
     const match = await bcrypt.compare(password, user.password)
     if(!match) return res.status(401).json({message:'Parola incorecta'})
-    
+    //'roles':user.getUserRoles
     const accessToken = jwt.sign(
         {
             'UserInfo':{
                 'username':user.username,
-                'roles':user.getUserRoles
+                'roles':[420]
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
