@@ -42,12 +42,16 @@ app.use('/register', require('./routes/register'))
 app.use('/login', require('./routes/auth'))
 app.use('/refresh', require('./routes/refresh'))
 
-//Protected routes
-app.use(verifyJWT)
+//DE MUTAT LA RUTE PROTECTED CAND E GATA
+app.use('/geo' , require('./routes/api/geoRounter'))
 app.use('/api/countries', require('./routes/api/countryRoutes'))
 app.use('/api/counties', require('./routes/api/countyRoutes'))
 app.use('/api/cities', require('./routes/api/cityRoutes'))
 app.use('/api/locations', require('./routes/api/locationRoutes'))
+
+//Protected routes
+//app.use(verifyJWT)
+
 
 
 app.use(errorHandler)
