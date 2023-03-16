@@ -3,5 +3,5 @@ module.exports = () =>{
     const models = require('./ModelsConfig')
     const relations = require('./relationship')
     relations()
-    db.sync({ alter: true })
+    db.sync()
 }

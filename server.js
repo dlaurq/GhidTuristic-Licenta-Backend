@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/register', require('./routes/register'))
 app.use('/login', require('./routes/auth'))
 app.use('/refresh', require('./routes/refresh'))
+app.use('/logout', require('./routes/logout'))
 
 //DE MUTAT LA RUTE PROTECTED CAND E GATA
 app.use('/geo' , require('./routes/api/geoRounter'))

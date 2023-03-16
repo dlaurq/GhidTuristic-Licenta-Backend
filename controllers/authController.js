@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 
-
+const roles = [1337, 420]
 const login = async (req,res)=>{
 
     const {username, password} = req.body
@@ -34,6 +34,10 @@ const login = async (req,res)=>{
         {expiresIn:'7D'}
     )
 
+    user.refreshToken = refreshToken
+    const result = await user.save()
+    console.log(result)
+
     res.cookie('jwt', refreshToken,{
         httpOnly:true,
         secure:true,
@@ -41,7 +45,7 @@ const login = async (req,res)=>{
         maxAge: 7*24*60*60*1000
     })
 
-    res.json({accessToken})
+    res.json({ roles, accessToken })
 }
 
 const refresh = (req,res) =>{
@@ -50,6 +54,9 @@ const refresh = (req,res) =>{
     if(!cookies?.jwt) return res.status(401).json({message:'Neautorizat'})
 
     const refreshToken = cookies.jwt
+
+    const foundUser = User.findOne({where:{refreshToken: refreshToken}})
+    if(!foundUser) return res.sendStatus(403)
 
     jwt.verify(
         refreshToken,
@@ -65,22 +72,33 @@ const refresh = (req,res) =>{
                 {
                     'UserInfo':{
                         'username':user.username,
-                        'roles':user.getUserRoles
+                        'roles':[420]
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn:'10m'}
             )
 
-            res.json({accessToken})
+            res.json({ roles, accessToken })
         })
 }
 
 const logout = async (req,res)=>{
     const cookies = req.cookies
     if(!cookies?.jwt) return res.sendStatus(204)
+    const refreshToken = cookies.jwt
+
+    const foundUser = await User.findOne({where:{refreshToken: refreshToken}})
+    if(!foundUser) {
+        res.clearCookie('jwt',{httpOnly:true, sameSite:'None', secure:true})
+        return res.sendStatus(204)
+    }
+
+    foundUser.refreshToken = ''
+    await foundUser.save()
+
     res.clearCookie('jwt',{httpOnly:true, sameSite:'None', secure:true})
-    res.json({message:'Cookie cleared'})
+    res.sendStatus(204)
 }
 
 //Generate JWT
