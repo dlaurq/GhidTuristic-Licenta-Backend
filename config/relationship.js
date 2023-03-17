@@ -29,6 +29,8 @@ module.exports = () => {
     //User
     User.hasMany(Role)
     Role.belongsTo(User)
+    User.hasMany(Place)
+    Place.belongsTo(User)
 
     //Super Many to Many relations
     ////User and Place

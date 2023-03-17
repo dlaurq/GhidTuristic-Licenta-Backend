@@ -8,6 +8,7 @@ const db = require('./config/database')
 const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT')
+
 //Routes
 //const usersRoutes = require('./routes/api/usersRoutes')
 //const authRoutes = require('./routes/api/authRoutes')
@@ -30,6 +31,26 @@ dbConfig()
 const app = express()
 
 
+const multer = require('multer')
+const path = require('path');
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) =>{
+      cb(null, './uploads')
+    },
+  
+    filename: (req, file, cb) => {
+      console.log(file)
+      cb(null, Date.now() + path.extname(file.originalname))
+    }
+  })
+  
+const upload = multer({storage: storage})
+
+
+
 app.get('/', (req, res) => {res.send('Hello World!!as!s')})
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -44,11 +65,15 @@ app.use('/refresh', require('./routes/refresh'))
 app.use('/logout', require('./routes/logout'))
 
 //DE MUTAT LA RUTE PROTECTED CAND E GATA
-app.use('/geo' , require('./routes/api/geoRounter'))
+app.use('/api/geo' , require('./routes/api/geoRounter'))
 app.use('/api/countries', require('./routes/api/countryRoutes'))
 app.use('/api/counties', require('./routes/api/countyRoutes'))
 app.use('/api/cities', require('./routes/api/cityRoutes'))
 app.use('/api/locations', require('./routes/api/locationRoutes'))
+app.use('/api/places', upload.array('imgs'), require('./routes/api/placeRoutes'))
+
+
+
 
 //Protected routes
 //app.use(verifyJWT)

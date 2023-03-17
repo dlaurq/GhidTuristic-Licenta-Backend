@@ -9,7 +9,7 @@ class User extends Model{
 
 User.init({
     id: {type: DataTypes.UUID, defaultValue:DataTypes.UUIDV4, primaryKey: true, allowNull: false},
-    username: {type: DataTypes.STRING(16), allowNull:false, unique:true,validate:{isAlphanumeric:true,min:4, max:16}},
+    username: {type: DataTypes.STRING, allowNull:false, unique:true,validate:{isAlphanumeric:true,min:4, max:16}},
     firstName: {type: DataTypes.STRING, validate:{isAlpha:true,min:4}},
     lastName: {type: DataTypes.STRING,validate:{isAlpha:true,min:4}},
     password: {type: DataTypes.TEXT, allowNull: false,validate:{min:8}},
