@@ -26,5 +26,22 @@ const createPlace = async (req, res) => {
     res.status(201).json({message: 'Entitatea a fost creata cu succes'})
 }
 
+const getPlacesByUser = async (req, res) => {
+    const username = req.params.username
+    const user = await User.findOne({where:{username: username}})
 
-module.exports = {createPlace}
+    
+    if(!user) return res.status(404).json({message:'Utilizatorul nu exista'})
+
+    const places = await Place.findAll({
+        attributes:['description', 'id', 'isActive', 'name'],
+        include:{
+            model: Image,
+            attributes:['imgUrl']
+        },
+        where:{UserId: user.id}})
+
+    res.status(200).json(places)
+}
+
+module.exports = {createPlace, getPlacesByUser}
