@@ -44,4 +44,26 @@ const getPlacesByUser = async (req, res) => {
     res.status(200).json(places)
 }
 
-module.exports = {createPlace, getPlacesByUser}
+const getPlaces = async (req, res) => {
+    const places = await Place.findAll({
+        attributes:['description', 'id', 'isActive', 'name'],
+        include:{
+            model: Image,
+            attributes:['imgUrl']
+        }
+    })
+    res.status(200).json(places)
+}
+
+const getPlace = async (req, res) => {
+    const place = await Place.findOne({
+        attributes:['description', 'id', 'isActive', 'name'],
+        include:{
+            model: Image,
+            attributes:['imgUrl']
+        },
+        where:{name: req.params.name}})
+    res.status(200).json(place)
+}
+
+module.exports = {createPlace, getPlacesByUser, getPlaces, getPlace}

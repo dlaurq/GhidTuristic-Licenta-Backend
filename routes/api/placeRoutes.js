@@ -1,11 +1,14 @@
 const router = require('express').Router()
-const { createPlace, getPlacesByUser} = require('../../controllers/placeController')
+const { createPlace, getPlacesByUser, getPlaces, getPlace} = require('../../controllers/placeController')
 
 
 
-router.post('/',createPlace)
+router
+    .get('/', getPlaces)
+    .post('/',createPlace)
 
 router.get('/user/:username', getPlacesByUser)
 
+router.get('/:name', getPlace)
 
 module.exports = router
