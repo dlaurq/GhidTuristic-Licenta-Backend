@@ -72,6 +72,7 @@ app.use('/api/counties', require('./routes/api/countyRoutes'))
 app.use('/api/cities', require('./routes/api/cityRoutes'))
 app.use('/api/locations', require('./routes/api/locationRoutes'))
 app.use('/api/places', upload.array('imgs'), require('./routes/api/placeRoutes'))
+app.use('/api/reviews', upload.array('imgs'), require('./routes/api/reviewRoutes'))
 
 
 

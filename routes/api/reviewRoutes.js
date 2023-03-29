@@ -4,7 +4,9 @@ const {getAllReviews, getAllPlaceReviews, getAllUserReviews, createReview, updat
 router.get('/', getAllReviews)
 router.get('/user/:id', getAllUserReviews)
 router.get('/place/:id', getAllPlaceReviews)
+
 router.post('/', createReview)
+
 router.patch('/:id', updateReview)
 router.delete('/:id', deleteReview)
 

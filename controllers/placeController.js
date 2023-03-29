@@ -2,6 +2,7 @@ const Place = require('../models/Place')
 const Image = require('../models/Image')
 const Location = require('../models/Location')
 const User = require('../models/user')
+const Review = require('../models/Review')
 
 const createPlace = async (req, res) => {
     const {name, description, address, city, username} = req.body
@@ -58,10 +59,20 @@ const getPlaces = async (req, res) => {
 const getPlace = async (req, res) => {
     const place = await Place.findOne({
         attributes:['description', 'id', 'isActive', 'name'],
-        include:{
-            model: Image,
-            attributes:['imgUrl']
-        },
+        include:[
+            {
+                model: Image,
+                attributes:['imgUrl']
+            },
+            {
+                model: Review,
+                attributes:['createdAt', 'description', 'rating', 'title'],
+                include:{
+                    model: Image,
+                    attributes:['imgUrl']
+                }
+            },
+        ],
         where:{name: req.params.name}})
     res.status(200).json(place)
 }

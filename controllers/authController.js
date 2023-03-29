@@ -9,7 +9,7 @@ const login = async (req,res)=>{
     const {username, password} = req.body
     if(!username || !password) return res.status(400).json({message:'Toate campurile trebuiesc completate'})
 
-    const user = await User.findOne({where: {username:username}})
+    const user = await User.findOne({attributes:['id', 'password', 'username', 'refreshToken'], where: {username:username}})
     if(!user) return res.status(401).json({message:'Utilizatorul nu a fost gasit'})
 
     const match = await bcrypt.compare(password, user.password)
@@ -55,7 +55,7 @@ const refresh = (req,res) =>{
 
     const refreshToken = cookies.jwt
 
-    const foundUser = User.findOne({where:{refreshToken: refreshToken}})
+    const foundUser = User.findOne({attributes:['id', 'password', 'username', 'refreshToken'], where:{refreshToken: refreshToken}})
     if(!foundUser) return res.sendStatus(403)
 
     jwt.verify(
@@ -64,7 +64,7 @@ const refresh = (req,res) =>{
         async (err, decode) =>{
             if (err) return res.status(403).json({message:'Interzis'})
 
-            const user = await User.findOne({where: {username:decode.username}})
+            const user = await User.findOne({attributes:['id', 'password', 'username', 'refreshToken'], where: {username:decode.username}})
 
             if(!user) return res.status(401).json({message:'Neautorizat'})
 
@@ -88,7 +88,7 @@ const logout = async (req,res)=>{
     if(!cookies?.jwt) return res.sendStatus(204)
     const refreshToken = cookies.jwt
 
-    const foundUser = await User.findOne({where:{refreshToken: refreshToken}})
+    const foundUser = await User.findOne({attributes:['id', 'password', 'username', 'refreshToken'], where:{refreshToken: refreshToken}})
     if(!foundUser) {
         res.clearCookie('jwt',{httpOnly:true, sameSite:'None', secure:true})
         return res.sendStatus(204)

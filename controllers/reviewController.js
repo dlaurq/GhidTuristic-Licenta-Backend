@@ -2,7 +2,6 @@ const Review = require('../models/Review')
 const Image = require('../models/Image')
 const User = require('../models/User')
 const Place = require('../models/Place')
-const PlaceReviews = require('../models/PlaceReviews')
 
 const getAllReviews = async (req,res)=>{
     const reviews = await Review.findAll()
@@ -28,27 +27,32 @@ const getReviewById = async (req,res)=>{
 }
 
 const createReview = async (req,res)=>{
-    const reviewData = req.body.review
-    const user = await User.findByPk(reviewData.userId)
-    const place = await Place.findByPk(reviewData.placeId)
-    if(user !== null && place !==null){
+    const {title, description, rating, username, entityName} = req.body
+    console.log(entityName)
+    const user = await User.findOne({attributes:['id'], where:{username: username}})
+    const place = await Place.findOne({attributes:['id'], where:{name: entityName}})
 
-        const review = await Review.create({
-            title:reviewData.title,
-            description:reviewData.description,
-            rating:reviewData.rating,
-            postDate:reviewData.date
-        })
+    if( !title || !rating ) return res.status(400).json({message:'Campuri incomplete'})
+    if(!user || !place) return res.status(404).json({message:'Utilizatorul sau entitatea nu exista'})
 
-        const placeReview = await PlaceReviews.create({
-            UserId:reviewData.userId,
-            PlaceId:reviewData.placeId,
-            ReviewId:review.id,
-        })
+    const review = await Review.create({
+        title: title,
+        description: description,
+        rating: rating,
+        isActive: true,
+        UserId: user.id,
+        PlaceId: place.id
+    })
 
-        res.json({message:'Review a fost inregistart cu succes.'})
+    const imgs = req.files
+    imgs.forEach(async img => {
+        const newImg = await Image.create({imgUrl:img.filename, isActive:true, ReviewId:review.id})
+        console.log(img.filename)
+    });
 
-    }else res.json({message:'A aparut o eroare'})
+    res.status(200).json({message:'Review a fost inregistart cu succes.'})
+
+    
 }
 
 const updateReview = async (req,res)=>{
