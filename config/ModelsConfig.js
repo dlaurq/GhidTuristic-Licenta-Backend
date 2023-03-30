@@ -4,7 +4,6 @@ module.exports = {
     Image: require('../models/Image'),
     Location: require('../models/Location'),
     Place: require('../models/Place'),
-    UsersPlacesReviews: require('../models/UsersPlacesReviews'),
     PlacesToVisit: require('../models/PlacesToVisit'),
     PlacesVisited: require('../models/PlacesVisited'),
     Review: require('../models/Review'),

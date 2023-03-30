@@ -1,7 +1,7 @@
 const Place = require('../models/Place')
 const Image = require('../models/Image')
 const Location = require('../models/Location')
-const User = require('../models/user')
+const User = require('../models/User')
 const Review = require('../models/Review')
 
 const createPlace = async (req, res) => {
@@ -67,10 +67,16 @@ const getPlace = async (req, res) => {
             {
                 model: Review,
                 attributes:['createdAt', 'description', 'rating', 'title'],
-                include:{
-                    model: Image,
-                    attributes:['imgUrl']
-                }
+                include:[
+                    {
+                        model: Image,
+                        attributes:['imgUrl']
+                    },
+                    {
+                        model: User,
+                        attributes:['username'],
+                    },
+                ]
             },
         ],
         where:{name: req.params.name}})

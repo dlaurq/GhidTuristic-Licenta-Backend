@@ -1,9 +1,10 @@
 module.exports = () => {
     const {Country, County, Image, Location, Place, PlacesToVisit, PlacesVisited, Review, User, Role, City} = require('./ModelsConfig')
-    console.log('aaa')
     //One to One Relations
     User.hasOne(Image);
     Image.belongsTo(User);
+    Location.hasMany(User)
+    User.belongsTo(Location)
 
     //One to Many relations
     ////Country
@@ -16,9 +17,8 @@ module.exports = () => {
     City.hasMany(Location);
     Location.belongsTo(City);
     ////Location
-    Location.hasMany(User);
+    
     Location.hasMany(Place);
-    User.belongsTo(Location);
     Place.belongsTo(Location);
     ////Place
     Place.hasMany(Image);
@@ -31,6 +31,8 @@ module.exports = () => {
     Role.belongsTo(User)
     User.hasMany(Place)
     Place.belongsTo(User)
+    Location.hasMany(User);
+    User.belongsTo(Location);
 
     //Super Many to Many relations
     ////User and Place
@@ -49,8 +51,8 @@ module.exports = () => {
     Place.hasMany(PlacesVisited);
     PlacesVisited.belongsTo(Place);
     //////Review
-    User.belongsToMany(Place,{through: Review});
-    Place.belongsToMany(User,{through: Review});
+    User.belongsToMany(Place,{through: Review, unique: false});
+    Place.belongsToMany(User,{through: Review, unique: false});
     User.hasMany(Review);
     Review.belongsTo(User);
     Place.hasMany(Review);
