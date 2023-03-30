@@ -3,7 +3,7 @@ const County = require('../models/County');
 const City = require('../models/City')
 
 const getAllCounties = async (req,res)=>{
-    const counties = await County.findAll()
+    const counties = await County.findAll({include: City})
     res.status(200).json(counties)
 }
 

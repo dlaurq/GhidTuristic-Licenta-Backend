@@ -2,7 +2,7 @@ const Country = require('../models/Country')
 const County = require('../models/County')
 
 const getAllCountries = async (req,res)=>{
-    const countries = await Country.findAll()
+    const countries = await Country.findAll({include: County})
     res.status(200).json(countries)
 }
 

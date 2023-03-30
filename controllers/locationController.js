@@ -4,7 +4,16 @@ const Place = require('../models/Place');
 const City = require('../models/City')
 
 const getAllLocations = async (req,res)=>{
-    const locations = await Location.findAll()
+    const locations = await Location.findAll({include: [
+        {
+            model: User,
+            attributes:['username']
+        },
+        {
+            model: Place,
+            attributes:['name']
+        }
+    ]})
     res.status(200).json(locations)
 }
 
