@@ -1,9 +1,49 @@
 const Users = require('../models/User')
+const Roles = require('../models/Role')
+const Reviews = require('../models/Review')
+const Places = require('../models/Place')
+const Images = require('../models/Image')
 const bcrypt = require('bcrypt')
 
 const getAllUsers =  async (req, res) =>{
-    const users = await Users.findAll()
-    res.json(users)
+    console.log('YES')
+    const users = await Users.findAll({
+        attributes:['firstName', 'lastName', 'username', 'email', 'phoneNR', 'bio'],
+        include:[
+            {
+                model: Roles
+            },
+            {
+                model: Reviews,
+                attributes:['id', 'createdAt', 'description', 'rating', 'title'],
+                include:[
+                    {
+                        model: Images,
+                        attributes:['imgUrl']
+                    },
+                    {
+                        model: Users,
+                        attributes:['username'],
+                    },
+                ]
+            },
+            {
+                model: Places,
+                attributes:['name', 'description'],
+                include:[
+                    {
+                        model: Images,
+                        attributes:['imgUrl']
+                    }
+                ]
+            },
+            {
+                model: Images,
+                attributes:['imgUrl']
+            }
+        ]
+    })
+    res.status(200).json(users)
 }
 
 const getUserById = async (req, res) =>{
@@ -39,7 +79,9 @@ const updateUser = async (req,res) =>{
 }
 
 const deleteUser = async(req,res) =>{
-
+    const username = req.params.username
+    await Users.destroy({where: {username: username}})
+    res.status(200).json({message: "Utilizatorul a fost sters cu succes"})
 }
 
 module.exports = {

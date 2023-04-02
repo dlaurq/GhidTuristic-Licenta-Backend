@@ -6,9 +6,10 @@ router.route('/')
     .get(getAllUsers)
     .post(createUser)
     .patch(updateUser)
-    .delete(deleteUser)
 
 router.get('/:id', getUserById)
+
+router.delete('/:username', deleteUser)
 
 
 module.exports = router

@@ -68,9 +68,8 @@ const updateReview = async (req,res)=>{
 }
 const deleteReview = async (req,res)=>{
     const id = req.params.id
-    const placeReview = await PlaceReviews.destroy({where:{ReviewId:id}})
-    const review = await Review.destroy({where:{id:id}})
-    res.json({message:"Delete reusit"})
+    await Review.destroy({where: {id: id}})
+    res.status(200).json({message: "Stergere reusita"})
 }
 
 
