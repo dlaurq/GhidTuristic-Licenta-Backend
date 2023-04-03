@@ -11,7 +11,9 @@ const getAllUsers =  async (req, res) =>{
         attributes:['firstName', 'lastName', 'username', 'email', 'phoneNR', 'bio'],
         include:[
             {
-                model: Roles
+                model: Roles,
+                attributes: ['name'],
+                
             },
             {
                 model: Reviews,
@@ -78,10 +80,28 @@ const updateUser = async (req,res) =>{
     
 }
 
-const deleteUser = async(req,res) =>{
+const deleteUser = async (req,res) =>{
     const username = req.params.username
     await Users.destroy({where: {username: username}})
     res.status(200).json({message: "Utilizatorul a fost sters cu succes"})
+}
+
+const promoteUserToPartner = async (req, res) => {
+    const {username} = req.body
+
+    if(!username) return res.status(404).json({message: "Utilizatorul nu exista"})
+
+    const user = await Users.findOne({where: {username: username}})
+
+    const role = await Roles.findOne({where: {
+        UserId: user.id,
+        name: 1337
+    }})
+    console.log(role)
+    if(!role) await Roles.create({name: 1337, UserId: user.id})
+    else await role.destroy()
+
+    res.sendStatus(200)
 }
 
 module.exports = {
@@ -89,5 +109,6 @@ module.exports = {
     getUserById,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    promoteUserToPartner
 }
