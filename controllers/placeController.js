@@ -83,4 +83,12 @@ const getPlace = async (req, res) => {
     res.status(200).json(place)
 }
 
-module.exports = {createPlace, getPlacesByUser, getPlaces, getPlace}
+const deletePlace = async (req, res) => {
+    const id = req.params.id
+
+    await Place.destroy({where: {id: id}})
+
+    res.status(200).json({message: "Entitatea a fost stearsa cu succes"})
+}
+
+module.exports = {createPlace, getPlacesByUser, getPlaces, getPlace, deletePlace}

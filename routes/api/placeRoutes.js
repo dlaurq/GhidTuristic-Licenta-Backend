@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { createPlace, getPlacesByUser, getPlaces, getPlace} = require('../../controllers/placeController')
+const { createPlace, getPlacesByUser, getPlaces, getPlace, deletePlace} = require('../../controllers/placeController')
 
 
 
@@ -10,5 +10,7 @@ router
 router.get('/user/:username', getPlacesByUser)
 
 router.get('/:name', getPlace)
+
+router.delete('/:id', deletePlace)
 
 module.exports = router
