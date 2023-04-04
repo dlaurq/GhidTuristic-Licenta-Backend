@@ -3,6 +3,9 @@ const Image = require('../models/Image')
 const Location = require('../models/Location')
 const User = require('../models/User')
 const Review = require('../models/Review')
+const Country = require('../models/Country')
+const County = require('../models/County')
+const City = require('../models/City')
 
 const createPlace = async (req, res) => {
     const {name, description, address, city, username} = req.body
@@ -36,10 +39,32 @@ const getPlacesByUser = async (req, res) => {
 
     const places = await Place.findAll({
         attributes:['description', 'id', 'isActive', 'name'],
-        include:{
-            model: Image,
-            attributes:['imgUrl']
-        },
+        include:[
+            {
+                model: Image,
+                attributes:['imgUrl']
+            },
+            {
+                model: Location,
+                attributes:['id', 'address'],
+                include: 
+                    {
+                        model: City,
+                        attributes:['id', 'name'],
+                        include: 
+                            {
+                                model: County,
+                                attributes:['id', 'name'],
+                                include: 
+                                    {
+                                        model: Country,
+                                        attributes:['id', 'name']
+                                    },
+                            }
+                    }                              
+            }
+            
+        ],
         where:{UserId: user.id}})
 
     res.status(200).json(places)
@@ -91,4 +116,39 @@ const deletePlace = async (req, res) => {
     res.status(200).json({message: "Entitatea a fost stearsa cu succes"})
 }
 
-module.exports = {createPlace, getPlacesByUser, getPlaces, getPlace, deletePlace}
+const updatePlace = async (req, res) => {
+    //console.log(req.params.id)
+    const id = req.params.id
+    const {name, description, country, county, city, address, extImgs} = req.body
+
+    if(!name || !description || !address || !city) return res.status(400).json({message:"Campuri incomplete"})
+    console.log(extImgs)
+    if(extImgs){
+        console.log(JSON.parse(extImgs))
+        const oldImgs = JSON.parse(extImgs)
+        console.log(oldImgs)
+        const imgs = await Image.findAll({attributes:['imgUrl'], where: {PlaceId: id}, raw: true})
+        const delUrls = imgs.filter(img => !oldImgs.includes(img))
+        console.log(imgs)
+        console.log("DELETE")
+        console.log(delUrls)
+    }
+
+    const oldPlace = await Place.findByPk(id)
+    console.log(oldPlace)
+    const oldLocationId = oldPlace.LocationId 
+    const oldLocation = await Location.findOne({where: {id: oldLocationId}})
+
+    const newLocation = await Location.create({CityId: city, address: address})
+
+    const place = await Place.update(
+        {name: name, description: description, isActive: false, LocationId: newLocation.id},
+        {where: {id: id}})
+    
+    await oldLocation.destroy()
+
+    res.status(201).json({message: "Entitatea a fost actualizata cu succes"})
+
+}
+
+module.exports = {createPlace, getPlacesByUser, getPlaces, getPlace, deletePlace, updatePlace}
