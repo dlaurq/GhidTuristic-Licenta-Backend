@@ -6,6 +6,7 @@ const Review = require('../models/Review')
 const Country = require('../models/Country')
 const County = require('../models/County')
 const City = require('../models/City')
+const fs = require('fs')
 
 const createPlace = async (req, res) => {
     const {name, description, address, city, username} = req.body
@@ -119,23 +120,52 @@ const deletePlace = async (req, res) => {
 const updatePlace = async (req, res) => {
     //console.log(req.params.id)
     const id = req.params.id
+    const newImgs = req.files
     const {name, description, country, county, city, address, extImgs} = req.body
 
+
+    //console.log('\n')
+    //console.log(extImgs)
+    //console.log('\n')
+
     if(!name || !description || !address || !city) return res.status(400).json({message:"Campuri incomplete"})
-    console.log(extImgs)
+    
+    //console.log(extImgs)
     if(extImgs){
-        console.log(JSON.parse(extImgs))
-        const oldImgs = JSON.parse(extImgs)
-        console.log(oldImgs)
+        
+        console.log('\n')
+        const saveImgs = JSON.parse(extImgs)
+        console.log("save img: ")
+        console.log(saveImgs)
         const imgs = await Image.findAll({attributes:['imgUrl'], where: {PlaceId: id}, raw: true})
-        const delUrls = imgs.filter(img => !oldImgs.includes(img))
+        const delImgs = imgs.filter(img => !saveImgs.find( img2 => img.imgUrl == img2.imgUrl))
+        console.log("all img: ")
         console.log(imgs)
         console.log("DELETE")
-        console.log(delUrls)
+        console.log(delImgs)
+        console.log('\n')
+        
+        fs.readdir('uploads', (err, files) => {
+            files.forEach(file => {
+              console.log(file);
+            });
+          });
+
+        delImgs.forEach(img => {
+            fs.unlink('uploads/' + img.imgUrl, async (err) => {
+                if (err) {
+                    res.status(500).send({
+                    message: "Could not delete the file. " + err,
+                    });
+                }
+                await Image.destroy({where: {imgUrl: img.imgUrl}})
+            })
+        })
+        
     }
 
     const oldPlace = await Place.findByPk(id)
-    console.log(oldPlace)
+    //console.log(oldPlace)
     const oldLocationId = oldPlace.LocationId 
     const oldLocation = await Location.findOne({where: {id: oldLocationId}})
 
@@ -144,7 +174,14 @@ const updatePlace = async (req, res) => {
     const place = await Place.update(
         {name: name, description: description, isActive: false, LocationId: newLocation.id},
         {where: {id: id}})
+
     
+
+
+    newImgs.forEach(async img => {
+        await Image.create({imgUrl: img.filename, isActive: true, PlaceId: id})
+    })
+
     await oldLocation.destroy()
 
     res.status(201).json({message: "Entitatea a fost actualizata cu succes"})

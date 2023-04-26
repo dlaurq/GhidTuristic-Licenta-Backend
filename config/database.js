@@ -28,5 +28,7 @@ const sequelize = new Sequelize('Licenta', MYSQL_USER, MYSQL_PASSWORD, {
     }
   });
 
+sequelize.options.logging = false
+
 module.exports = sequelize;
 
