@@ -74,6 +74,9 @@ app.use('/api/locations', require('./routes/api/locationRoutes'))
 app.use('/api/places', upload.array('imgs'), require('./routes/api/placeRoutes'))
 app.use('/api/reviews', upload.array('imgs'), require('./routes/api/reviewRoutes'))
 app.use('/api/users', require('./routes/api/usersRoutes'))
+app.use('/api/categories', require('./routes/api/categoryRoutes'))
+app.use('/api/visited', require('./routes/api/visitedRoutes'))
+app.use('/api/toVisit', require('./routes/api/toVisitRoutes'))
 
 
 

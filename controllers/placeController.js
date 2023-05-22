@@ -6,21 +6,23 @@ const Review = require('../models/Review')
 const Country = require('../models/Country')
 const County = require('../models/County')
 const City = require('../models/City')
+const Category = require('../models/Category')
 const fs = require('fs')
 
 const createPlace = async (req, res) => {
-    const {name, description, address, city, username} = req.body
+    const {name, description, address, city, username, category} = req.body
 
+    console.log('category = ' + category)
     console.log('aaaaaaa')
     console.log(req.files)
 
-    if(!name || !description || !address || !city) return res.status(400).json({message:"Campuri incomplete"})
+    if(!name || !description || !address || !city || !category) return res.status(400).json({message:"Campuri incomplete"})
 
     const user = await User.findOne({where:{username: username}})
 
     const location = await Location.create({CityId: city, address: address})
 
-    const place = await Place.create({name: name, description: description, isActive: false, LocationId: location.id, UserId: user.id})
+    const place = await Place.create({name: name, description: description, isActive: false, LocationId: location.id, UserId: user.id, CategoryId: category})
 
     const imgs = req.files
     imgs.forEach(async img => {
@@ -44,6 +46,9 @@ const getPlacesByUser = async (req, res) => {
             {
                 model: Image,
                 attributes:['imgUrl']
+            },
+            {
+                model: Category,
             },
             {
                 model: Location,
@@ -74,10 +79,16 @@ const getPlacesByUser = async (req, res) => {
 const getPlaces = async (req, res) => {
     const places = await Place.findAll({
         attributes:['description', 'id', 'isActive', 'name'],
-        include:{
+        include:[
+            {
             model: Image,
             attributes:['imgUrl']
-        }
+            },
+            {
+                model: Category,
+                attributes:['id']
+            }
+        ]
     })
     res.status(200).json(places)
 }
@@ -89,6 +100,9 @@ const getPlace = async (req, res) => {
             {
                 model: Image,
                 attributes:['imgUrl']
+            },
+            {
+                model: Category,
             },
             {
                 model: Review,
@@ -121,14 +135,14 @@ const updatePlace = async (req, res) => {
     //console.log(req.params.id)
     const id = req.params.id
     const newImgs = req.files
-    const {name, description, country, county, city, address, extImgs} = req.body
+    const {name, description, country, county, city, address, extImgs, category} = req.body
 
 
     //console.log('\n')
     //console.log(extImgs)
     //console.log('\n')
 
-    if(!name || !description || !address || !city) return res.status(400).json({message:"Campuri incomplete"})
+    if(!name || !description || !address || !city || !category) return res.status(400).json({message:"Campuri incomplete"})
     
     //console.log(extImgs)
     if(extImgs){
@@ -144,12 +158,6 @@ const updatePlace = async (req, res) => {
         console.log("DELETE")
         console.log(delImgs)
         console.log('\n')
-        
-        fs.readdir('uploads', (err, files) => {
-            files.forEach(file => {
-              console.log(file);
-            });
-          });
 
         delImgs.forEach(img => {
             fs.unlink('uploads/' + img.imgUrl, async (err) => {
@@ -172,7 +180,7 @@ const updatePlace = async (req, res) => {
     const newLocation = await Location.create({CityId: city, address: address})
 
     const place = await Place.update(
-        {name: name, description: description, isActive: false, LocationId: newLocation.id},
+        {name: name, description: description, isActive: false, LocationId: newLocation.id, CategoryId: category},
         {where: {id: id}})
 
     
@@ -184,7 +192,7 @@ const updatePlace = async (req, res) => {
 
     await oldLocation.destroy()
 
-    res.status(201).json({message: "Entitatea a fost actualizata cu succes"})
+    res.status(201).json({message: "Entitatea a fost actualizata cu succes", entity: place})
 
 }
 

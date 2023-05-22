@@ -9,5 +9,6 @@ module.exports = {
     Review: require('../models/Review'),
     User: require('../models/User'),
     Role: require('../models/Role'),
-    City: require('../models/City')
+    City: require('../models/City'),
+    Category: require('../models/Category')
 }

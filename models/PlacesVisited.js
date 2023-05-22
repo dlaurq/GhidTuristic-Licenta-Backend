@@ -6,7 +6,6 @@ class PlacesVisited extends Model{}
 
 PlacesVisited.init({
     id: {type: DataTypes.UUID, defaultValue:DataTypes.UUIDV4, primaryKey: true, allowNull: false},
-    date: {type: DataTypes.DATE, allowNull: false},
 },{sequelize:db, freezeTableName:true})
 
 

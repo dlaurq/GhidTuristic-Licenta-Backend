@@ -45,7 +45,7 @@ const login = async (req,res)=>{
         maxAge: 7*24*60*60*1000
     })
 
-    res.json({ roles, accessToken })
+    res.json({ roles, accessToken, username: user.username })
 }
 
 const refresh = (req,res) =>{
@@ -79,7 +79,7 @@ const refresh = (req,res) =>{
                 {expiresIn:'10m'}
             )
 
-            res.json({ roles, accessToken })
+            res.json({ roles, accessToken, username: user.username })
         })
 }
 

@@ -27,6 +27,7 @@ const getReviewById = async (req,res)=>{
 }
 
 const createReview = async (req,res)=>{
+    console.log('sal')
     const {title, description, rating, username, entityName} = req.body
     console.log(entityName)
     const user = await User.findOne({attributes:['id'], where:{username: username}})
@@ -68,6 +69,7 @@ const updateReview = async (req,res)=>{
 }
 const deleteReview = async (req,res)=>{
     const id = req.params.id
+    console.log(id)
     await Review.destroy({where: {id: id}})
     res.status(200).json({message: "Stergere reusita"})
 }
