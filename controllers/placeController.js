@@ -8,6 +8,8 @@ const County = require('../models/County')
 const City = require('../models/City')
 const Category = require('../models/Category')
 const fs = require('fs')
+const PlaceToVisit = require('../models/PlacesToVisit')
+const PlacesVisited = require('../models/PlacesVisited')
 
 const createPlace = async (req, res) => {
     const {name, description, address, city, username, category} = req.body
@@ -106,7 +108,7 @@ const getPlace = async (req, res) => {
             },
             {
                 model: Review,
-                attributes:['createdAt', 'description', 'rating', 'title'],
+                attributes:['id' ,'createdAt', 'description', 'rating', 'title'],
                 include:[
                     {
                         model: Image,
@@ -118,6 +120,22 @@ const getPlace = async (req, res) => {
                     },
                 ]
             },
+            {
+                model: PlaceToVisit,
+                attributes:['id'],
+                include:{
+                    model: User,
+                    attributes:['username'],
+                }
+            },
+            {
+                model: PlacesVisited,
+                attributes:['id'],
+                include:{
+                    model: User,
+                    attributes:['username'],
+                }
+            }
         ],
         where:{name: req.params.name}})
     res.status(200).json(place)
