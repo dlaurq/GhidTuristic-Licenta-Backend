@@ -21,8 +21,20 @@ const getAllPlaceReviews = async (req,res)=>{
 }
 
 const getReviewById = async (req,res)=>{
-    const id = req.params.id
-    const review = await Review.findByPk(id)
+    const review = await Review.findByPk(req.params.id, 
+        {
+            attributes: ['title', 'createdAt', 'rating', 'description'],
+            include: [
+                {
+                    model: User,
+                    attributes: ['username']
+                },
+                {
+                    model: Image,
+                    attributes: ['imgUrl']
+                }
+            ]
+        })
     res.json(review)
 }
 

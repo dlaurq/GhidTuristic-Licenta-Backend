@@ -4,6 +4,8 @@ const Reviews = require('../models/Review')
 const Places = require('../models/Place')
 const Images = require('../models/Image')
 const bcrypt = require('bcrypt')
+const PlacesToVisit = require('../models/PlacesToVisit')
+const PlacesVisited = require('../models/PlacesVisited')
 
 const getAllUsers =  async (req, res) =>{
     console.log('YES')
@@ -48,9 +50,28 @@ const getAllUsers =  async (req, res) =>{
     res.status(200).json(users)
 }
 
-const getUserById = async (req, res) =>{
-    const user = await Users.findByPk(req.params.id)
-    res.json(user)
+const getUser = async (req, res) =>{
+    const user = await Users.findOne({
+        where: {username: req.params.username},
+        attributes: ['username', 'firstName', 'lastName', 'email', 'phoneNr', 'bio'],
+        include: [
+            {
+                model: Reviews,
+                attributes: ['id']
+            },
+            {
+                model: PlacesToVisit,
+                attributes: ['id']
+            },
+            {
+                model: PlacesVisited,
+                attributes: ['id']
+            },
+
+        ]
+    })
+
+    res.status(200).json(user)
 }
 
 const createUser = async (req,res)=>{
@@ -106,7 +127,7 @@ const promoteUserToPartner = async (req, res) => {
 
 module.exports = {
     getAllUsers,
-    getUserById,
+    getUser,
     createUser,
     updateUser,
     deleteUser,

@@ -50,6 +50,10 @@ const getRecomandari = async (req, res) => {
         limit: 10
     })
 
+    //implementare top orase - faci join intre place reviews si orase, si faci max la rating si group by la nume oras
+
+    //Implementare top recomandari - adaugi la plaaces o col type bool care zice daca trb sau nu recomandata si faci cu where
+
     res.status(200).json({topRest, topActiv, topHotel})
 }
 
