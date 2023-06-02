@@ -1,4 +1,3 @@
-const Users = require('../models/User')
 const Roles = require('../models/Role')
 const Reviews = require('../models/Review')
 const Places = require('../models/Place')
@@ -6,6 +5,7 @@ const Images = require('../models/Image')
 const bcrypt = require('bcrypt')
 const PlacesToVisit = require('../models/PlacesToVisit')
 const PlacesVisited = require('../models/PlacesVisited')
+const Users = require('../models/User')
 
 const getAllUsers =  async (req, res) =>{
     console.log('YES')
@@ -98,7 +98,10 @@ const createUser = async (req,res)=>{
 }
 
 const updateUser = async (req,res) =>{
-    
+    const {firstName, lastName, email, bio, phoneNr} = req.body
+    const username = req.params.username
+    await Users.update({firstName: firstName, lastName: lastName, email: email, bio: bio, phoneNr: phoneNr}, {where: {username}}) 
+    res.status(200).json({message: 'Actualizare reusita'})
 }
 
 const deleteUser = async (req,res) =>{
@@ -108,6 +111,7 @@ const deleteUser = async (req,res) =>{
 }
 
 const promoteUserToPartner = async (req, res) => {
+    console.log('promoted')
     const {username} = req.body
 
     if(!username) return res.status(404).json({message: "Utilizatorul nu exista"})
@@ -125,11 +129,25 @@ const promoteUserToPartner = async (req, res) => {
     res.sendStatus(200)
 }
 
+const changePw = async (req, res) => {
+    const pw = req.body.pw
+    const username = req.params.username
+    console.log(pw, username)
+
+    const hashedPassword = await bcrypt.hash(pw, 10)
+
+    await Users.update({password: hashedPassword},  {where: {username}})
+
+    console.log('asd')
+    res.status(200).json({message: 'Update reusit'})
+}
+
 module.exports = {
     getAllUsers,
     getUser,
     createUser,
     updateUser,
     deleteUser,
-    promoteUserToPartner
+    promoteUserToPartner,
+    changePw
 }

@@ -13,9 +13,9 @@ User.init({
     firstName: {type: DataTypes.STRING, validate:{isAlpha:true,min:4}},
     lastName: {type: DataTypes.STRING,validate:{isAlpha:true,min:4}},
     password: {type: DataTypes.TEXT, allowNull: false,validate:{min:8}},
-    email: {type: DataTypes.STRING, allowNull: false, unique:true,validate:{isEmail:true}},
-    phoneNr: {type: DataTypes.STRING, unique:true,validate:{isNumeric:true}},
-    bio: {type: DataTypes.STRING,validate:{isAlphanumeric:true}},
+    email: {type: DataTypes.STRING},
+    phoneNr: {type: DataTypes.STRING},
+    bio: {type: DataTypes.STRING},
     isActive: {type: DataTypes.BOOLEAN, allowNull:false},
     refreshToken: {type: DataTypes.STRING}
 },{sequelize:db})
