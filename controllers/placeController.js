@@ -53,6 +53,10 @@ const getPlacesByUser = async (req, res) => {
                 model: Category,
             },
             {
+                model: Review,
+                attributes:['rating']
+            },
+            {
                 model: Location,
                 attributes:['id', 'address'],
                 include: 
@@ -83,12 +87,16 @@ const getPlaces = async (req, res) => {
         attributes:['description', 'id', 'isActive', 'name'],
         include:[
             {
-            model: Image,
-            attributes:['imgUrl']
+                model: Image,
+                attributes:['imgUrl']
             },
             {
                 model: Category,
-                attributes:['id']
+                attributes:['name']
+            },
+            {
+                model: Review,
+                attributes:['rating']
             }
         ]
     })

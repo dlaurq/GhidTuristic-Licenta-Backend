@@ -2,6 +2,8 @@ const Location = require('../models/Location');
 const User = require('../models/User');
 const Place = require('../models/Place');
 const City = require('../models/City')
+const Country = require('../models/Country')
+const County = require('../models/County')
 
 const getAllLocations = async (req,res)=>{
     const locations = await Location.findAll({include: [
@@ -12,7 +14,21 @@ const getAllLocations = async (req,res)=>{
         {
             model: Place,
             attributes:['name']
-        }
+        },
+        {
+            model: City,
+            attributes:['id', 'name'],
+            include: 
+                {
+                    model: County,
+                    attributes:['id', 'name'],
+                    include: 
+                        {
+                            model: Country,
+                            attributes:['id', 'name']
+                        },
+                }
+        }    
     ]})
     res.status(200).json(locations)
 }
@@ -37,7 +53,10 @@ const createLocation = async (req,res) =>{
 }
 
 const updateLocation = async(req,res)=>{
-    await Location.update({address:req.body.address, CityId:req.body.cityId}, {where:{id:req.params.id}})
+    const {address, city} = req.body
+    const id = req.params.id
+
+    await Location.update({address: address, CityId: city}, {where:{id: id}})
     res.status(200).json({message:'Locatia a fost updatatat cu succes.'})
 }
 

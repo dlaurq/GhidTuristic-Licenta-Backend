@@ -15,7 +15,7 @@ const createCategory = async (req, res) => {
 } 
 
 const updateCategory = async (req, res) => {
-    const name = req.body
+    const name = req.body.name
     const id = req.params.id
 
     if(!name) return res.status(404).json({message: 'Camp incomplet'})

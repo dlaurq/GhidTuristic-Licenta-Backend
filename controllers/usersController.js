@@ -18,6 +18,16 @@ const getAllUsers =  async (req, res) =>{
                 
             },
             {
+                model: Places,
+                attributes:['name', 'description'],
+                include:[
+                    {
+                        model: Images,
+                        attributes:['imgUrl']
+                    }
+                ]
+            },
+            {
                 model: Reviews,
                 attributes:['id', 'createdAt', 'description', 'rating', 'title'],
                 include:[
@@ -29,16 +39,6 @@ const getAllUsers =  async (req, res) =>{
                         model: Users,
                         attributes:['username'],
                     },
-                ]
-            },
-            {
-                model: Places,
-                attributes:['name', 'description'],
-                include:[
-                    {
-                        model: Images,
-                        attributes:['imgUrl']
-                    }
                 ]
             },
             {
