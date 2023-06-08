@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 const PlacesToVisit = require('../models/PlacesToVisit')
 const PlacesVisited = require('../models/PlacesVisited')
 const Users = require('../models/User')
+const Categorys = require('../models/Category')
 
 const getAllUsers =  async (req, res) =>{
     console.log('YES')
@@ -15,15 +16,23 @@ const getAllUsers =  async (req, res) =>{
             {
                 model: Roles,
                 attributes: ['name'],
-                
             },
             {
                 model: Places,
-                attributes:['name', 'description'],
+                attributes:['description', 'id', 'isActive', 'name'],
+                as: 'Entities',
                 include:[
                     {
                         model: Images,
                         attributes:['imgUrl']
+                    },
+                    {
+                        model: Categorys,
+                        attributes:['name']
+                    },
+                    {
+                        model: Reviews,
+                        attributes:['rating']
                     }
                 ]
             },

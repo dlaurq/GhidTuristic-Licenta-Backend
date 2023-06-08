@@ -34,7 +34,7 @@ module.exports = () => {
     //User
     User.hasMany(Role)
     Role.belongsTo(User)
-    User.hasMany(Place)
+    User.hasMany(Place, {as: 'Entities'})
     Place.belongsTo(User)
     Location.hasMany(User);
     User.belongsTo(Location);
