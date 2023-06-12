@@ -92,11 +92,30 @@ const getPlaces = async (req, res) => {
             },
             {
                 model: Category,
-                attributes:['name']
+                attributes:['id', 'name']
             },
             {
                 model: Review,
                 attributes:['rating']
+            },
+            {
+                model: Location,
+                attributes:['id', 'address'],
+                include: 
+                    {
+                        model: City,
+                        attributes:['id', 'name'],
+                        include: 
+                            {
+                                model: County,
+                                attributes:['id', 'name'],
+                                include: 
+                                    {
+                                        model: Country,
+                                        attributes:['id', 'name']
+                                    },
+                            }
+                    }                              
             }
         ]
     })

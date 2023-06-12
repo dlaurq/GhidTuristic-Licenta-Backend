@@ -5,6 +5,6 @@ router.get('/user/:id', getAllVisitedByUser)
 
 router.post('/', createVisited)
 
-router.delete('/:username', deleteVisited)
+router.delete('/:id', deleteVisited)
 
 module.exports = router

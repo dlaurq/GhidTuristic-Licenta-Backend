@@ -46,22 +46,22 @@ module.exports = () => {
     //Super Many to Many relations
     ////User and Place
     //////PlacesToVisit
-    User.belongsToMany(Place,{through: PlacesToVisit, unique: false});
-    Place.belongsToMany(User,{through: PlacesToVisit, unique: false});
+    User.belongsToMany(Place,{through: PlacesToVisit, as: 'PlacesToVisit2', unique: false});
+    Place.belongsToMany(User,{through: PlacesToVisit, as: 'PlacesToVisit2', unique: false});
     User.hasMany(PlacesToVisit);
     PlacesToVisit.belongsTo(User);
     Place.hasMany(PlacesToVisit);
     PlacesToVisit.belongsTo(Place);
     //////PlacesVisited
-    User.belongsToMany(Place,{through: PlacesVisited, unique: false});
-    Place.belongsToMany(User,{through: PlacesVisited, unique: false});
+    User.belongsToMany(Place,{through: PlacesVisited, as: 'PlacesVisited2', unique: false});
+    Place.belongsToMany(User,{through: PlacesVisited, as: 'PlacesVisited2', unique: false});
     User.hasMany(PlacesVisited);
     PlacesVisited.belongsTo(User);
     Place.hasMany(PlacesVisited);
     PlacesVisited.belongsTo(Place);
     //////Review
-    User.belongsToMany(Place,{through: Review, unique: false});
-    Place.belongsToMany(User,{through: Review, unique: false});
+    User.belongsToMany(Place,{through: Review,  unique: false});
+    Place.belongsToMany(User,{through: Review,  unique: false});
     User.hasMany(Review);
     Review.belongsTo(User);
     Place.hasMany(Review);
