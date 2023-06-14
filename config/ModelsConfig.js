@@ -10,5 +10,6 @@ module.exports = {
     User: require('../models/User'),
     Role: require('../models/Role'),
     City: require('../models/City'),
-    Category: require('../models/Category')
+    Category: require('../models/Category'),
+    ListaEntitati: require('../models/ListaEntitati'),
 }

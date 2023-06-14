@@ -1,12 +1,16 @@
 const ToVisited = require('../models/PlacesToVisit')
+const ListaEntitati = require('../models/ListaEntitati')
 const User = require('../models/User')
 
 const createToVisit = async (req, res) => {
-    const {place, username} = req.body
+    const {places, username, data} = req.body
     const user = await User.findOne({where: {username: username}})
-    const userId = user.id
+    
+    const toVisit = await ToVisited.create({UserId: user.id})
 
-    await ToVisited.create({PlaceId: place, UserId: userId})
+    places.forEach(async (place) => {
+        await ListaEntitati.create({PlaceId: place.id, PlacesToVisitId: toVisit.id, data: data})
+    });
 
     res.status(201).json({message: "Obiectivul a fost adaugata cu succes in lista"})
 }
@@ -28,5 +32,7 @@ const getAllToVisitByUser = async (req, res) => {
 
     res.status(200).json(toVisit)
 }
+
+
 
 module.exports = {createToVisit, deleteToVisit, getAllToVisitByUser}

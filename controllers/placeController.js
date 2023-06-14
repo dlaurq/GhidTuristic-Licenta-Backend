@@ -12,7 +12,7 @@ const PlaceToVisit = require('../models/PlacesToVisit')
 const PlacesVisited = require('../models/PlacesVisited')
 
 const createPlace = async (req, res) => {
-    const {name, description, address, city, username, category} = req.body
+    const {name, description, address, city, username, category, lat, lng} = req.body
 
     console.log('category = ' + category)
     console.log('aaaaaaa')
@@ -24,7 +24,7 @@ const createPlace = async (req, res) => {
 
     const location = await Location.create({CityId: city, address: address})
 
-    const place = await Place.create({name: name, description: description, isActive: false, LocationId: location.id, UserId: user.id, CategoryId: category})
+    const place = await Place.create({name: name, description: description, isActive: false, LocationId: location.id, UserId: user.id, CategoryId: category, lat: lat, lng: lng})
 
     const imgs = req.files
     imgs.forEach(async img => {
@@ -43,7 +43,7 @@ const getPlacesByUser = async (req, res) => {
     if(!user) return res.status(404).json({message:'Utilizatorul nu exista'})
 
     const places = await Place.findAll({
-        attributes:['description', 'id', 'isActive', 'name'],
+        attributes:['description', 'id', 'isActive', 'name', 'lat', 'lng'],
         include:[
             {
                 model: Image,
@@ -84,7 +84,7 @@ const getPlacesByUser = async (req, res) => {
 
 const getPlaces = async (req, res) => {
     const places = await Place.findAll({
-        attributes:['description', 'id', 'isActive', 'name'],
+        attributes:['description', 'id', 'isActive', 'name', 'lat', 'lng'],
         include:[
             {
                 model: Image,
@@ -180,7 +180,7 @@ const updatePlace = async (req, res) => {
     //console.log(req.params.id)
     const id = req.params.id
     const newImgs = req.files
-    const {name, description, country, county, city, address, extImgs, category} = req.body
+    const {name, description, country, county, city, address, extImgs, category, lat, lng} = req.body
 
 
     //console.log('\n')
@@ -225,7 +225,7 @@ const updatePlace = async (req, res) => {
     const newLocation = await Location.create({CityId: city, address: address})
 
     const place = await Place.update(
-        {name: name, description: description, isActive: false, LocationId: newLocation.id, CategoryId: category},
+        {name: name, description: description, isActive: false, LocationId: newLocation.id, CategoryId: category, lat: lat, lng: lng},
         {where: {id: id}})
 
     

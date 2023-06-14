@@ -80,27 +80,6 @@ const getUser = async (req, res) =>{
             },
             {
                 model: Places,
-                as:'PlacesToVisit2',
-                attributes:['description', 'id', 'isActive', 'name'],
-                through: {
-                    attributes: ['id']
-                },
-                include:[
-                    {
-                        model: Images,
-                        attributes:['imgUrl']
-                    },
-                    {
-                        model: Categorys,
-                    },
-                    {
-                        model: Reviews,
-                        attributes:['rating']
-                    }
-                ],
-            },
-            {
-                model: Places,
                 as:'PlacesVisited2',
                 attributes:['description', 'id', 'isActive', 'name'],
                 through: {

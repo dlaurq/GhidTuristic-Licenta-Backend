@@ -1,5 +1,5 @@
 module.exports = () => {
-    const {Country, County, Image, Location, Place, PlacesToVisit, PlacesVisited, Review, User, Role, City, Category} = require('./ModelsConfig')
+    const {Country, County, Image, Location, Place, PlacesToVisit, PlacesVisited, Review, User, Role, City, Category, ListaEntitati} = require('./ModelsConfig')
     //One to One Relations
     User.hasOne(Image);
     Image.belongsTo(User);
@@ -46,15 +46,20 @@ module.exports = () => {
     //Super Many to Many relations
     ////User and Place
     //////PlacesToVisit
-    User.belongsToMany(Place,{through: PlacesToVisit, as: 'PlacesToVisit2', unique: false});
-    Place.belongsToMany(User,{through: PlacesToVisit, as: 'PlacesToVisit2', unique: false});
+    PlacesToVisit.belongsToMany(Place,{through: ListaEntitati,});
+    Place.belongsToMany(PlacesToVisit,{through: ListaEntitati,});
+
+    //////PlacesToVisit
+    User.belongsToMany(ListaEntitati,{through: PlacesToVisit, as: 'UserListaEntitati'});
+    ListaEntitati.belongsToMany(User,{through: PlacesToVisit, as: 'UserListaEntitati'});
     User.hasMany(PlacesToVisit);
     PlacesToVisit.belongsTo(User);
-    Place.hasMany(PlacesToVisit);
-    PlacesToVisit.belongsTo(Place);
+    ListaEntitati.hasMany(PlacesToVisit);
+    PlacesToVisit.belongsTo(ListaEntitati);
+
     //////PlacesVisited
-    User.belongsToMany(Place,{through: PlacesVisited, as: 'PlacesVisited2', unique: false});
-    Place.belongsToMany(User,{through: PlacesVisited, as: 'PlacesVisited2', unique: false});
+    User.belongsToMany(Place,{through: PlacesVisited, as: 'PlacesVisited2'});
+    Place.belongsToMany(User,{through: PlacesVisited, as: 'PlacesVisited2'});
     User.hasMany(PlacesVisited);
     PlacesVisited.belongsTo(User);
     Place.hasMany(PlacesVisited);
@@ -66,4 +71,7 @@ module.exports = () => {
     Review.belongsTo(User);
     Place.hasMany(Review);
     Review.belongsTo(Place);
+
+
+
 }
