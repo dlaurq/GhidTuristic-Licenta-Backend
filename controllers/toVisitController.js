@@ -6,10 +6,10 @@ const createToVisit = async (req, res) => {
     const {places, username, data} = req.body
     const user = await User.findOne({where: {username: username}})
     
-    const toVisit = await ToVisited.create({UserId: user.id})
+    const toVisit = await ToVisited.create({UserId: user.id, data: data})
 
     places.forEach(async (place) => {
-        await ListaEntitati.create({PlaceId: place.id, PlacesToVisitId: toVisit.id, data: data})
+        await ListaEntitati.create({PlaceId: place.id, PlacesToVisitId: toVisit.id})
     });
 
     res.status(201).json({message: "Obiectivul a fost adaugata cu succes in lista"})
@@ -33,6 +33,12 @@ const getAllToVisitByUser = async (req, res) => {
     res.status(200).json(toVisit)
 }
 
+const updateList = async (req,res) => {
+    const {list, entity} = req.params
 
+    await ListaEntitati.update({done: true}, {where: {PlaceId: entity, PlacesToVisitId: list}})
 
-module.exports = {createToVisit, deleteToVisit, getAllToVisitByUser}
+    res.json({message: 'update reusit'})
+}
+
+module.exports = {createToVisit, deleteToVisit, getAllToVisitByUser, updateList}

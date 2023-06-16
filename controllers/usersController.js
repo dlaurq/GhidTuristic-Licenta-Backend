@@ -7,6 +7,7 @@ const PlacesToVisit = require('../models/PlacesToVisit')
 const PlacesVisited = require('../models/PlacesVisited')
 const Users = require('../models/User')
 const Categorys = require('../models/Category')
+const ListaEntitati = require('../models/ListaEntitati')
 
 const getAllUsers =  async (req, res) =>{
     console.log('YES')
@@ -77,6 +78,30 @@ const getUser = async (req, res) =>{
                         attributes:['username'],
                     },
                 ]
+            },
+            {
+                model: PlacesToVisit,
+                include:{
+                    model: Places,
+                    through:{
+                        attributes: ['done']
+                      },
+                    include:[
+                        {
+                            model: Images,
+                            attributes:['imgUrl']
+                        },
+                        {
+                            model: Categorys,
+                            attributes:['id', 'name']
+                        },
+                        {
+                            model: Reviews,
+                            attributes:['rating']
+                        },
+                    ]
+                 }   
+                
             },
             {
                 model: Places,

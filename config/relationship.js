@@ -46,16 +46,19 @@ module.exports = () => {
     //Super Many to Many relations
     ////User and Place
     //////PlacesToVisit
-    PlacesToVisit.belongsToMany(Place,{through: ListaEntitati,});
-    Place.belongsToMany(PlacesToVisit,{through: ListaEntitati,});
+    PlacesToVisit.belongsToMany(Place,{through: ListaEntitati});
+    Place.belongsToMany(PlacesToVisit,{through: ListaEntitati});
+    PlacesToVisit.hasMany(ListaEntitati)
+    ListaEntitati.belongsTo(PlacesToVisit)
+    Place.hasMany(ListaEntitati)
+    ListaEntitati.belongsTo(Place)
 
-    //////PlacesToVisit
-    User.belongsToMany(ListaEntitati,{through: PlacesToVisit, as: 'UserListaEntitati'});
-    ListaEntitati.belongsToMany(User,{through: PlacesToVisit, as: 'UserListaEntitati'});
-    User.hasMany(PlacesToVisit);
-    PlacesToVisit.belongsTo(User);
-    ListaEntitati.hasMany(PlacesToVisit);
-    PlacesToVisit.belongsTo(ListaEntitati);
+    User.hasMany(PlacesToVisit)
+    PlacesToVisit.belongsTo(User)
+
+
+    
+
 
     //////PlacesVisited
     User.belongsToMany(Place,{through: PlacesVisited, as: 'PlacesVisited2'});
