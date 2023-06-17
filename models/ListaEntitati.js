@@ -6,7 +6,8 @@ class ListaEntitati extends Model{}
 
 ListaEntitati.init({
     id: {type: DataTypes.UUID, defaultValue:DataTypes.UUIDV4, primaryKey: true, allowNull: false},
-    done: {type: DataTypes.BOOLEAN, defaultValue: false}
+    done: {type: DataTypes.BOOLEAN, defaultValue: false},
+    sort: {type: DataTypes.DECIMAL},
 },{sequelize:db, freezeTableName:false})
 
 

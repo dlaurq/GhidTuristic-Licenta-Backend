@@ -8,8 +8,8 @@ const createToVisit = async (req, res) => {
     
     const toVisit = await ToVisited.create({UserId: user.id, data: data})
 
-    places.forEach(async (place) => {
-        await ListaEntitati.create({PlaceId: place.id, PlacesToVisitId: toVisit.id})
+    places.forEach(async (place, index) => {
+        await ListaEntitati.create({PlaceId: place.id, PlacesToVisitId: toVisit.id, sort: index })
     });
 
     res.status(201).json({message: "Obiectivul a fost adaugata cu succes in lista"})
@@ -19,6 +19,8 @@ const deleteToVisit = async (req, res) => {
     const id = req.params.id
 
     await ToVisited.destroy({where:{id: id}})
+
+    await ListaEntitati.destroy({where: {PlacesToVisitId: id}})
 
     res.status(200).json({message: "Stergere reusita"})
 }

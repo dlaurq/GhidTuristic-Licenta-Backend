@@ -84,7 +84,7 @@ const getUser = async (req, res) =>{
                 include:{
                     model: Places,
                     through:{
-                        attributes: ['done']
+                        attributes: ['done', 'sort'],
                       },
                     include:[
                         {
@@ -99,8 +99,10 @@ const getUser = async (req, res) =>{
                             model: Reviews,
                             attributes:['rating']
                         },
-                    ]
-                 }   
+                    ],
+                    
+                },
+                
                 
             },
             {
