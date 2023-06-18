@@ -43,14 +43,12 @@ const storage = multer.diskStorage({
     },
   
     filename: (req, file, cb) => {
-      console.log(file)
+      //console.log(file)
       cb(null, Date.now() + path.extname(file.originalname))
     }
   })
   
 const upload = multer({storage: storage})
-
-
 
 app.get('/', (req, res) => {res.send('Hello World!!as!s')})
 app.use(credentials);
@@ -66,21 +64,21 @@ app.use('/login', require('./routes/auth'))
 app.use('/refresh', require('./routes/refresh'))
 app.use('/logout', require('./routes/logout'))
 app.use('/recomandari', require('./routes/recomandariRoutes'))
+app.use('/gpxs', require('./routes/gpxsRoutes'))
 
+//app.use(upload.single('gpxs'))
 //DE MUTAT LA RUTE PROTECTED CAND E GATA
 app.use('/api/geo' , require('./routes/api/geoRounter'))
 app.use('/api/countries', require('./routes/api/countryRoutes'))
 app.use('/api/counties', require('./routes/api/countyRoutes'))
 app.use('/api/cities', require('./routes/api/cityRoutes'))
 app.use('/api/locations', require('./routes/api/locationRoutes'))
-app.use('/api/places', upload.array('imgs'), require('./routes/api/placeRoutes'))
+app.use('/api/places',upload.fields([{name: 'gpxs'},{name: 'imgs'}]), require('./routes/api/placeRoutes'))
 app.use('/api/reviews', upload.array('imgs'), require('./routes/api/reviewRoutes'))
 app.use('/api/users', require('./routes/api/usersRoutes'))
 app.use('/api/categories', require('./routes/api/categoryRoutes'))
 app.use('/api/visited', require('./routes/api/visitedRoutes'))
 app.use('/api/toVisit', require('./routes/api/toVisitRoutes'))
-
-
 
 
 //Protected routes

@@ -1,8 +1,13 @@
 module.exports = () => {
-    const {Country, County, Image, Location, Place, PlacesToVisit, PlacesVisited, Review, User, Role, City, Category, ListaEntitati} = require('./ModelsConfig')
+    const {Country, County, Image, Location, Place, PlacesToVisit, PlacesVisited, Review, User, Role, City, Category, ListaEntitati, Gpx} = require('./ModelsConfig')
     //One to One Relations
     User.hasOne(Image);
     Image.belongsTo(User);
+
+    Place.hasOne(Gpx)
+    Gpx.belongsTo(Place)
+
+
     Location.hasMany(User)
     User.belongsTo(Location)
 

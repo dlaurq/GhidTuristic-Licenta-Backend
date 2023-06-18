@@ -12,4 +12,5 @@ module.exports = {
     City: require('../models/City'),
     Category: require('../models/Category'),
     ListaEntitati: require('../models/ListaEntitati'),
+    Gpx: require('../models/Gpx'),
 }
