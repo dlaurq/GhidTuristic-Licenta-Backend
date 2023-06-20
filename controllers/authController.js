@@ -4,6 +4,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 
 const roles = [1337, 420]
+
 const login = async (req,res)=>{
 
     const {username, password} = req.body
@@ -35,8 +36,7 @@ const login = async (req,res)=>{
     )
 
     user.refreshToken = refreshToken
-    const result = await user.save()
-    console.log(result)
+    await user.save()
 
     res.cookie('jwt', refreshToken,{
         httpOnly:true,
@@ -101,7 +101,29 @@ const logout = async (req,res)=>{
     res.sendStatus(204)
 }
 
-//Generate JWT
+const register = async (req,res)=>{
+
+    const {username, password, email} = req.body
+
+    if(!username || !password || !email) return res.status(400).json({message:'Completati toate campurile'})
+
+    const duplicateUsername = await User.findOne({where:{username:username}})
+    if(duplicateUsername) return res.status(409).json({message:'Numele de utilizator este deja inregistart'})
+    
+    const duplicateEmail = await User.findOne({where:{email:email}})
+    if(duplicateEmail) return res.status(409).json({message:'Adresa email este deja inregistrata'})
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await User.create(
+    {
+        username:username,
+        password:hashedPassword,
+        email:email
+    })
+
+    res.status(200).json({message:'Utilizator creat cu succes'})
+}
 
  
-module.exports = {login, logout, refresh}
+module.exports = {login, logout, refresh, register}

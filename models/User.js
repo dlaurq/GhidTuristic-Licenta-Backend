@@ -16,7 +16,6 @@ User.init({
     email: {type: DataTypes.STRING},
     phoneNr: {type: DataTypes.STRING},
     bio: {type: DataTypes.STRING},
-    isActive: {type: DataTypes.BOOLEAN, allowNull:false},
     refreshToken: {type: DataTypes.STRING}
 },{sequelize:db})
 

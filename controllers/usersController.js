@@ -134,15 +134,15 @@ const getUser = async (req, res) =>{
 }
 
 const createUser = async (req,res)=>{
-    const {username, password, email,} = req.body
-    console.log(username, password, email)
+    const {username, password, email} = req.body
+
     if(!username || !password || !email) return res.status(400).json({message:'Completati toate campurile'})
 
     const duplicateUsername = await Users.findOne({where:{username:username}})
-    if(duplicateUsername) return res.status(409).json({message:'Username existent'})
+    if(duplicateUsername) return res.status(409).json({message:'Numele de utilizator este deja inregistart'})
     
     const duplicateEmail = await Users.findOne({where:{email:email}})
-    if(duplicateEmail) return res.status(409).json({message:'Email existent'})
+    if(duplicateEmail) return res.status(409).json({message:'Adresa email este deja inregistrata'})
 
     const hashedPassword = await bcrypt.hash(password, 10)
 

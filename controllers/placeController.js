@@ -15,20 +15,24 @@ const Gpx = require('../models/Gpx')
 const createPlace = async (req, res) => {
     const {name, description, address, city, username, category, lat, lng} = req.body
 
-
-    console.log(req.files)
-
     if(!name || !description || !address || !city || !category) return res.status(400).json({message:"Campuri incomplete"})
 
     const user = await User.findOne({where:{username: username}})
 
     const location = await Location.create({CityId: city, address: address})
 
-    const place = await Place.create({name: name, description: description, isActive: false, LocationId: location.id, UserId: user.id, CategoryId: category, lat: lat, lng: lng})
+    const place = await Place.create({name: name, description: description, isActive: false, LocationId: location.id, UserId: user.id, CategoryId: category})
 
     const {imgs, gpxs} = req.files
 
-    await Gpx.create({url: gpxs[0].filename, name: gpxs[0].originalname, PlaceId: place.id})
+    if(lat, lng){
+        place.lat = lat
+        place.lng = lng
+        await place.save()
+    }
+
+    if(gpxs)
+        await Gpx.create({url: gpxs[0].filename, name: gpxs[0].originalname, PlaceId: place.id})
 
     imgs.forEach(async img => {
         const newImg = await Image.create({imgUrl:img.filename, isActive:true, PlaceId:place.id})
@@ -185,13 +189,9 @@ const deletePlace = async (req, res) => {
 const updatePlace = async (req, res) => {
     //console.log(req.params.id)
     const id = req.params.id
-    console.log('req files')
-    console.log(req.files)
-    console.log(req.files.imgs)
-    console.log(req.files.gpxs)
 
     const newImgs = req.files.imgs
-    const gpxs = req.files.gpxs[0]
+    const gpxs = req?.files?.gpxs?.[0]
     const {name, description, country, county, city, address, extImgs, category, lat, lng} = req.body
     //console.log(lat, lng)
     //console.log('\n')
@@ -241,8 +241,12 @@ const updatePlace = async (req, res) => {
 
     if(lat && lng) await Place.update({lat: lat, lng: lng},{where: {id: id}})
 
-    await Gpx.destroy({where: {PlaceId: id}})
-    await Gpx.create({url: gpxs.filename, name: gpxs.originalname, PlaceId: id})
+    
+
+    if(gpxs){
+        await Gpx.destroy({where: {PlaceId: id}})
+        await Gpx.create({url: gpxs.filename, name: gpxs.originalname, PlaceId: id})
+    }
 
     newImgs?.forEach(async img => {
         await Image.create({imgUrl: img.filename, isActive: true, PlaceId: id})

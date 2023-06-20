@@ -59,10 +59,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('uploads'))
 
 
-app.use('/register', require('./routes/register'))
-app.use('/login', require('./routes/auth'))
-app.use('/refresh', require('./routes/refresh'))
-app.use('/logout', require('./routes/logout'))
+
+app.use('/auth', require('./routes/auth'))
 app.use('/recomandari', require('./routes/recomandariRoutes'))
 app.use('/gpxs', require('./routes/gpxsRoutes'))
 
