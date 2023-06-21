@@ -36,7 +36,7 @@ const getRecomandari = async (req, res) => {
             model: Categories,
             required: true,
             where:{
-                name: 'hotel'
+                name: 'Hotel'
             }
         },
         {
@@ -47,7 +47,7 @@ const getRecomandari = async (req, res) => {
         limit: 10
     })
 
-    const topActiv = await Places.findAll({
+    const topTrasee = await Places.findAll({
         include: [{
         model: Reviews,
         required: true,
@@ -55,7 +55,7 @@ const getRecomandari = async (req, res) => {
             model: Categories,
             required: true,
             where:{
-                name: 'activitate'
+                name: 'Trasee Montane'
             }
         },
         {
@@ -66,12 +66,49 @@ const getRecomandari = async (req, res) => {
         limit: 10
     })
 
-    //implementare top orase - faci join intre place reviews si orase, si faci max la rating si group by la nume oras
+    const topActivitati = await Places.findAll({
+        include: [{
+        model: Reviews,
+        required: true,
+        },{
+            model: Categories,
+            required: true,
+            where:{
+                name: 'Activitate'
+            }
+        },
+        {
+            model: Image,
+            attributes:['imgUrl']
+        },],
+        order:[['Reviews','rating', 'DESC']],
+        limit: 10
+    })
+    /** 
+    const topRecomandari = await Places.findAll({
+        attributes: ['id', 'name', [sequelize.fn('AVG', sequelize.col('Reviews.rating')), 'average_rating']],
+        include: [
+          {
+            model: Reviews,
+          },
+          {
+            model: Categories,
+            required: true,
+          },
+          {
+            model: Image,
+            attributes: ['imgUrl'],
+          },
+        ],
+        group: ['Place.id', 'Images.id'],
+        order: [[sequelize.literal('average_rating'), 'DESC']],
+      });
+    */
 
-    //Implementare top recomandari - adaugi la plaaces o col type bool care zice daca trb sau nu recomandata si faci cu where
-
-    res.status(200).json({topRest, topActiv, topHotel})
+    res.status(200).json({topRest, topTrasee, topHotel, topActivitati})
+   
 }
 
-
+//attributes: [[Sequelize.fn('AVG', Sequelize.col('Reviews.rating')), 'rating']],
+//order:[['AVG', 'DESC']],
 module.exports = {getRecomandari}

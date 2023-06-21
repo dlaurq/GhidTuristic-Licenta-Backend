@@ -108,7 +108,6 @@ const getUser = async (req, res) =>{
             {
                 model: Places,
                 as:'PlacesVisited2',
-                attributes:['description', 'id', 'isActive', 'name'],
                 through: {
                     attributes: ['id']
                 },
