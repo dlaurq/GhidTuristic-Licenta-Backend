@@ -1,5 +1,3 @@
-const allowedOrigins = [
-    'http://localhost:5173',
-];
+const allowedOrigins = process.env.FRONTEND
 
 module.exports = allowedOrigins;
