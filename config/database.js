@@ -1,30 +1,19 @@
 const Sequelize = require('sequelize');
-const { MYSQL_USER, MYSQL_PASSWORD, MYSQL_IP } = require('./config');
-/*
+
 const mysql = require('mysql2');
 
-const DB_NAME = 'Licenta'
-//MYSQL conn
-const connection = mysql.createConnection({
-    host: MYSQL_IP,
-    user: MYSQL_USER,
-    password: MYSQL_PASSWORD
-  });
 
-//CREATE DB
-connection.query(
-`CREATE DATABASE IF NOT EXISTS ${DB_NAME}`,
-(err,res) =>{
-    console.log(res);
-    console.log(err);
-});
-connection.end();
-*/
+//MYSQL conn
+const connection = mysql.createConnection(process.env.MYSQL_URL);
 
 //DB connaction
-const sequelize = new Sequelize('Licenta', MYSQL_USER, MYSQL_PASSWORD, {
-    host: MYSQL_IP,
+const sequelize = new Sequelize({
+    username: process.env.MYSQL_USER, 
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.DATABASE,
     dialect: 'mysql',
+    port: process.env.MYSQL_PORT,
+    host: process.env.MYSQL_IP,
     define: {
         freezTableName: true
     }
