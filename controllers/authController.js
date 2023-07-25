@@ -1,11 +1,11 @@
-const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 
-const roles = [1337, 420]
+
 
 const login = async (req,res)=>{
+    let roles = [1337, 420]
 
     const {username, password} = req.body
     if(!username || !password) return res.status(400).json({message:'Toate campurile trebuiesc completate'})
@@ -15,7 +15,6 @@ const login = async (req,res)=>{
 
     const match = await bcrypt.compare(password, user.password)
     if(!match) return res.status(401).json({message:'Parola incorecta'})
-    //'roles':user.getUserRoles
     const accessToken = jwt.sign(
         {
             'UserInfo':{
@@ -45,12 +44,13 @@ const login = async (req,res)=>{
         maxAge: 7*24*60*60*1000
     })
 
+    if(username !== 'admin') roles = []
     res.json({ roles, accessToken, username: user.username })
 }
 
 const refresh = (req,res) =>{
     const cookies = req.cookies
-
+    let roles = [1337, 420]
     if(!cookies?.jwt) return res.status(401).json({message:'Neautorizat'})
 
     const refreshToken = cookies.jwt
@@ -78,7 +78,7 @@ const refresh = (req,res) =>{
                 process.env.ACCESS_TOKEN_SECRET,
                 {expiresIn:'10m'}
             )
-
+            if(user.username !== 'admin') roles = []
             res.json({ roles, accessToken, username: user.username })
         })
 }

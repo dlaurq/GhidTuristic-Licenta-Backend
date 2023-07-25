@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const { MYSQL_USER, MYSQL_PASSWORD, MYSQL_IP } = require('./config');
+/*
 const mysql = require('mysql2');
 
 const DB_NAME = 'Licenta'
@@ -18,6 +19,7 @@ connection.query(
     console.log(err);
 });
 connection.end();
+*/
 
 //DB connaction
 const sequelize = new Sequelize('Licenta', MYSQL_USER, MYSQL_PASSWORD, {

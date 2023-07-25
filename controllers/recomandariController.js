@@ -9,7 +9,6 @@ const getRecomandari = async (req, res) => {
         include: [
             {
                 model: Reviews,
-                required: true,
             },
             {
                 model: Categories,
@@ -31,7 +30,6 @@ const getRecomandari = async (req, res) => {
     const topHotel = await Places.findAll({
         include: [{
         model: Reviews,
-        required: true,
         },{
             model: Categories,
             required: true,
@@ -50,12 +48,11 @@ const getRecomandari = async (req, res) => {
     const topTrasee = await Places.findAll({
         include: [{
         model: Reviews,
-        required: true,
         },{
             model: Categories,
             required: true,
             where:{
-                name: 'Trasee Montane'
+                name: 'Traseu montan'
             }
         },
         {
@@ -69,7 +66,6 @@ const getRecomandari = async (req, res) => {
     const topActivitati = await Places.findAll({
         include: [{
         model: Reviews,
-        required: true,
         },{
             model: Categories,
             required: true,

@@ -65,7 +65,7 @@ const deleteLocation = async(req,res)=>{
     const users = await User.findAll({where:{LocationId:req.params.id}})
     const places = await Place.findAll({where:{LocationId:req.params.id}})
     
-    if(users.length !== 0 || places.length !== 0 ) return res.status(405).json({message:"Orasul nu s-a putut sterge deoarece are Utilizatori sau Entitati atribuite."})
+    if(users.length !== 0 || places.length !== 0 ) return res.status(405).json({message:"Locatia nu s-a putut sterge deoarece are Utilizatori sau Entitati atribuite."})
     
     await Location.destroy({where:{id:req.params.id}})
     res.status(200).json({message:'Locatia a fost stearsa cu succes.'})

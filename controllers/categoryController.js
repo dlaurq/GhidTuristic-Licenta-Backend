@@ -1,7 +1,10 @@
 const Category = require('../models/Category')
+const Place = require('../models/Place')
 
 const getAllCategories = async (req, res) => {
-    const categories = await Category.findAll()
+    const categories = await Category.findAll({
+        include: Place
+    })
     res.status(200).json(categories)
 } 
 
@@ -26,6 +29,10 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     const id = req.params.id
+    const place = await Place.findAll({where: {CategoryId: id}})
+    console.log(place)
+
+    if(place.length > 0) return res.status(405).json({message: 'Categoria este atasata unei entitati'})
 
     await Category.destroy({where: {id: id}})
     res.status(200).json({message: 'Categoria a fost stearsa cu succes'})

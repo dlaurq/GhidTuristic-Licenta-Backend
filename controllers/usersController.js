@@ -164,6 +164,15 @@ const updateUser = async (req,res) =>{
 
 const deleteUser = async (req,res) =>{
     const username = req.params.username
+
+    const user = await Users.findOne({where: {username: username}})
+
+    const places = await Places.findAll({where:{UserId: user.id}})
+    const reviews = await Reviews.findAll({where:{UserId: user.id}})
+
+    if(places.length > 0) return res.status(405).json({message: 'Utilizatorul are atasate entitati'})
+    if(reviews.length > 0) return res.status(405).json({message: 'Utilizatorul are atasate recenzii'})
+
     await Users.destroy({where: {username: username}})
     res.status(200).json({message: "Utilizatorul a fost sters cu succes"})
 }
