@@ -17,6 +17,12 @@ const verifyJWT = require('./middleware/verifyJWT')
 
 //DB test
 
+const fs = require('fs')
+const dir ='./uploads'
+
+if(!fs.existsSync(dir))
+  fs.mkdirSync(dir)
+
 try {
   db.authenticate();
   console.log('Connected to the DB');
