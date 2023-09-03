@@ -58,7 +58,7 @@ const upload = multer({storage: storage})
 
 app.get('/', (req, res) => {res.send('Hello World!!as!s')})
 app.use(credentials);
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json())
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
