@@ -9,6 +9,7 @@ const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT')
 
+
 //Routes
 //const usersRoutes = require('./routes/api/usersRoutes')
 //const authRoutes = require('./routes/api/authRoutes')
@@ -35,6 +36,8 @@ dbConfig()
 
 //app
 const app = express()
+app.use(credentials);
+app.use(cors(corsOptions));
 
 
 const multer = require('multer')
@@ -57,13 +60,11 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 app.get('/', (req, res) => {res.send('Hello World!!as!s')})
-app.use(credentials);
-app.use(cors());
+
 app.use(express.json())
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('uploads'))
-
 
 
 app.use('/auth', require('./routes/auth'))
