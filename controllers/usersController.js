@@ -12,7 +12,7 @@ const ListaEntitati = require('../models/ListaEntitati')
 const getAllUsers =  async (req, res) =>{
     console.log('YES')
     const users = await Users.findAll({
-        attributes:['firstName', 'lastName', 'username', 'email', 'phoneNR', 'bio'],
+        attributes:['firstName', 'lastName', 'username', 'email', 'phoneNr', 'bio'],
         include:[
             {
                 model: Roles,
